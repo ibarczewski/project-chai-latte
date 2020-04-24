@@ -12,7 +12,6 @@ const ProtectedRoute = ({ path, component: Component, permission, render, ...res
         
         // if (!abp.session.userId)     
         if(abp.utils.getCookieValue(AppConsts.User.UserId) == null)   {
-          alert('hi')
           return (
             <Redirect
               to={{

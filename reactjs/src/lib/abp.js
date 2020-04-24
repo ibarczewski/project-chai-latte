@@ -393,7 +393,7 @@
     abp.message = abp.message || {};
 
     var showMessage = function (message, title) {
-        alert((title || '') + ' ' + message);
+       // alert((title || '') + ' ' + message);
 
     };
 

@@ -2,6 +2,7 @@ export interface CreateRating {
     id: number;
     userId: number;
     placeId: string;
+    placeName: string;
     drinkOptionId: string;
     beanTypeId: string;
     beanName: string;
@@ -20,6 +21,8 @@ export interface CreateRating {
     isDifferentServingTemp: boolean;
     isDifferentBarista: boolean;
     otherReason: boolean;
-    ratingId : number;  
+    ratingId : number; 
+    moreRatingDetails : CreateRating[]; 
+    creationTime : Date;
 
 }

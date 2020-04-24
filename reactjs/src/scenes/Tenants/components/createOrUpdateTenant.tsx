@@ -64,11 +64,7 @@ class CreateOrUpdateTenant extends React.Component<ICreateOrUpdateTenantProps> {
           <FormItem label={L('Name')} {...formItemLayout}>
             {getFieldDecorator('name', { rules: rules.name })(<Input />)}
           </FormItem>
-          {this.props.modalType == 'edit' ? (
-            <FormItem label={L('AdminEmailAddress')} {...formItemLayout}>
-              {getFieldDecorator('adminEmailAddress', { rules: rules.adminEmailAddress })(<Input />)}
-            </FormItem>
-          ) : null}
+         
           {this.props.modalType == 'edit' ? (
             <FormItem label={L('DatabaseConnectionString')} {...formItemLayout}>
               {getFieldDecorator('connectionString')(<Input />)}

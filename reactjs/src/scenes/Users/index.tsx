@@ -1,6 +1,6 @@
 import { Card, Col, Row, Table, Tag, Dropdown, Menu, Modal, Input } from 'antd';
 import * as React from 'react';
-import CreateOrUpdateUser from './components/createOrUpdateUser';
+//import CreateOrUpdateUser from './components/createOrUpdateUser';
 import { EntityDto } from 'src/services/dto/entityDto';
 import { observer, inject } from 'mobx-react';
 import Stores from 'src/stores/storeIdentifier';
@@ -203,18 +203,7 @@ class User extends AppComponentBase<IUserProps, IUserState> {
             />
           </Col>
         </Row>
-        <CreateOrUpdateUser
-          wrappedComponentRef={this.saveFormRef}
-          visible={this.state.modalVisible}
-          onCancel={() =>
-            this.setState({
-              modalVisible: false,
-            })
-          }
-          modalType={this.state.userId == 0 ? 'edit' : 'create'}
-          onCreate={this.handleCreate}
-          roles={this.props.userStore.roles}
-        />
+
       </Card>
     );
   }

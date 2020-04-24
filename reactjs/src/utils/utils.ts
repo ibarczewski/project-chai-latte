@@ -74,12 +74,12 @@ class Utils {
     return routers.filter(route => route.path === path)[0];
   };
 
-  setLocalization() {
-    if (!abp.utils.getCookieValue('Abp.Localization.CultureName')) {
-      let language = navigator.language;
-      abp.utils.setCookieValue('Abp.Localization.CultureName', language, new Date(new Date().getTime() + 5 * 365 * 86400000), abp.appPath);
-    }
-  }
+  // setLocalization() {
+  //   if (!abp.utils.getCookieValue('Abp.Localization.CultureName')) {
+  //     let language = navigator.language;
+  //     abp.utils.setCookieValue('Abp.Localization.CultureName', language, new Date(new Date().getTime() + 5 * 365 * 86400000), abp.appPath);
+  //   }
+  // }
 
   getCurrentClockProvider(currentProviderName: string): abp.timing.IClockProvider {
     if (currentProviderName === 'unspecifiedClockProvider') {

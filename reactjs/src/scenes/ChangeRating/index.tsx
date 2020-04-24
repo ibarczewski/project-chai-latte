@@ -43,6 +43,7 @@ class ChangeRating extends AppComponentBase<IChangeRatingProps, IChangeRatingSta
   searchkey: string | null;
   placeid: string | null;
   //BeanOptionsResult: getBeanOptions[];
+  placename: string | null;
 
   state = {
     userId: 0,
@@ -74,7 +75,7 @@ class ChangeRating extends AppComponentBase<IChangeRatingProps, IChangeRatingSta
 
     await this.props.userStore.GetDrinkOption();
     await this.props.userStore.GetBeanOption();
-
+    this.placename = this.getParameterByName('placename', window.location.href);
     this.forceUpdate();
   }
 
@@ -107,36 +108,84 @@ class ChangeRating extends AppComponentBase<IChangeRatingProps, IChangeRatingSta
 
   ChangeRatingClicked = async (e: any) => {
 
-    var myObject = {} as RatingSearchInput;
-    myObject.Id = Number(this.getParameterByName('Ratingid', window.location.href));
-    myObject.placeId = this.getParameterByName('placeid', window.location.href);
-    myObject.DrinkOptionId = this.getParameterByName('DrinkOptionId', window.location.href);
-    myObject.BeanTypeId = this.getParameterByName('BeanTypeId', window.location.href);
-    myObject.UserId = Number(abp.utils.getCookieValue(AppConsts.User.UserId));
-    var LatestRatingDetailId = await this.props.userStore.GetPreviousRatingDetail(myObject);
+    // var myObject = {} as RatingSearchInput;
+    // myObject.Id = Number(this.getParameterByName('Ratingid', window.location.href));
+    // myObject.placeId = this.getParameterByName('placeid', window.location.href);
+    // myObject.DrinkOptionId = this.getParameterByName('DrinkOptionId', window.location.href);
+    // myObject.BeanTypeId = this.getParameterByName('BeanTypeId', window.location.href);
+    // myObject.UserId = Number(abp.utils.getCookieValue(AppConsts.User.UserId));
+    // var LatestRatingDetailId = await this.props.userStore.GetPreviousRatingDetail(myObject);
 
-    if (LatestRatingDetailId > 0) {
-      var myObject = {} as RatingSearchInput;
-      myObject.UserId = Number(abp.utils.getCookieValue(AppConsts.User.UserId));
-      myObject.Id = LatestRatingDetailId;
-      myObject.IsDrinkRatioChanged = this.state.idchkDrinkratioschanged;
-      myObject.IsBlendComponentsChanged = this.state.idchkDrinkratioschanged;
-      myObject.IsDifferentServingTemp = this.state.idchkDrinkratioschanged;
-      myObject.IsDifferentBarista = this.state.idchkDrinkratioschanged;
-      myObject.OtherReason = this.state.idchkDrinkratioschanged;
-      var Id = await this.props.userStore.UpdateRatingDetail(myObject);
-      alert(Id);
+    var previousratingid = Number(this.getParameterByName('previousratingid', window.location.href))
+    var previousmoreratingId = Number(this.getParameterByName('previousmoreratingId', window.location.href))
+    this.placeid = this.getParameterByName('placeid', window.location.href);
+    var ratingpoints = this.getParameterByName('ratingpoints', window.location.href);
 
+    var currentmoreratingid = this.getParameterByName('currentmoreratingid', window.location.href)
 
+    if (previousratingid != undefined) {
+      if (previousratingid > 0) {
+        
+        var myObject = {} as RatingSearchInput;
+        myObject.UserId = Number(abp.utils.getCookieValue(AppConsts.User.UserId));
+        myObject.Id = previousratingid;
+        myObject.IsDrinkRatioChanged = this.state.idchkDrinkratioschanged;
+        myObject.IsBlendComponentsChanged = this.state.idchkBlendcomponentschanged;
+        myObject.IsDifferentServingTemp = this.state.idchkDifferentservingtemperature;
+        myObject.IsDifferentBarista = this.state.idchkDifferentbarista;
+        myObject.OtherReason = this.state.idchkOther;
+        myObject.PlaceRating = Number(ratingpoints);
+
+        await this.props.userStore.UpdateRating(myObject);
+        this.props.history.push("/AnotherRating?placeid=" + this.placeid + "&currentmoreratingid=" + currentmoreratingid);
+      }
+    } else {
       
+      if (previousmoreratingId != undefined) {
+        if (previousmoreratingId > 0) {
+          var myObject = {} as RatingSearchInput;
+          myObject.UserId = Number(abp.utils.getCookieValue(AppConsts.User.UserId));
+          myObject.Id = previousmoreratingId;
+          myObject.IsDrinkRatioChanged = this.state.idchkDrinkratioschanged;
+          myObject.IsBlendComponentsChanged = this.state.idchkBlendcomponentschanged;
+          myObject.IsDifferentServingTemp = this.state.idchkDifferentservingtemperature;
+          myObject.IsDifferentBarista = this.state.idchkDifferentbarista;
+          myObject.OtherReason = this.state.idchkOther;
+          myObject.PlaceRating = Number(ratingpoints);
+          await this.props.userStore.UpdateRatingDetail(myObject);
+
+          this.props.history.push("/AnotherRating?placeid=" + this.placeid + "&currentmoreratingid=" + currentmoreratingid);
+        }
+      }
+
+
     }
+
+
 
 
   }
 
   AddNewRatingClicked = async (e: any) => {
+ 
+
+    var currentmoreratingid = Number(this.getParameterByName('currentmoreratingid', window.location.href));
+
+    var myObject = {} as RatingSearchInput;
+    myObject.UserId = Number(abp.utils.getCookieValue(AppConsts.User.UserId));
+    myObject.Id = currentmoreratingid;
+    myObject.IsDrinkRatioChanged = this.state.idchkDrinkratioschanged;
+    myObject.IsBlendComponentsChanged = this.state.idchkBlendcomponentschanged;
+    myObject.IsDifferentServingTemp = this.state.idchkDifferentservingtemperature;
+    myObject.IsDifferentBarista = this.state.idchkDifferentbarista;
+    myObject.OtherReason = this.state.idchkOther;
+    var ratingpoints = this.getParameterByName('ratingpoints', window.location.href);
+    myObject.PlaceRating = Number(ratingpoints);
+    await this.props.userStore.UpdateRatingDetail(myObject);
+    this.props.history.push("/AnotherRating?placeid=" + this.placeid + "&currentmoreratingid=" + currentmoreratingid);
 
   }
+
 
   render() {
     // const { getFieldDecorator } = this.props.form;
@@ -146,6 +195,7 @@ class ChangeRating extends AppComponentBase<IChangeRatingProps, IChangeRatingSta
         <div>
         </div>)
     } else {
+
       return (
         <div>
 
@@ -154,10 +204,12 @@ class ChangeRating extends AppComponentBase<IChangeRatingProps, IChangeRatingSta
               <div className="row">
                 <div className="col-lg-7 col-md-12 col-sm-12">
                   <div className="heading">
-                    <h2>Foxtail Farmhouse - Winter Park</h2>
+                  <h2>{this.placename}</h2>
                   </div>
                   <div className="tab_contentarea add_rating_text">
-                    <p>You just rated Foxtail’s Chiapas bean! This rating is lower than your previous rating. Would you like to change your previous rating or add this review?</p>
+                    {/* <p>You just rated Foxtail’s Chiapas bean! This rating is lower than your previous rating. Would you like to change your previous rating or add this review?</p> */}
+                    <p>You just rated bean! This rating is lower than your previous rating. Would you like to change your previous rating or add this review?</p>
+
                     <p className="m-t10">Reason for change: Select all that apply</p>
                   </div>
                   <div className="form-group check_box">
@@ -191,7 +243,9 @@ class ChangeRating extends AppComponentBase<IChangeRatingProps, IChangeRatingSta
                 </div>
 
 
-                <NewsFeeds {...this.props} />
+                <div className="col-lg-5 hidden-md">
+                  <NewsFeeds {...this.props} />
+                </div>
 
                 {/* <div className="col-lg-5 hidden-md">
               <div className="sidebar-tabs">

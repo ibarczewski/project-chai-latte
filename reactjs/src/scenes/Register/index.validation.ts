@@ -1,8 +1,8 @@
 const rules = {
     // name: [{ required: true, message: 'Please input your name!' }],
-    password: [{ required: true, message: 'Please input your password!' }],
-    userName: [{ required: true, message: 'Please input your username!' }],
-    emailAddress: [{ required: true, message: 'Please input your email!' }],
+    password: [{ required: true, message: 'Password is required!' }],
+    userName: [{ required: true, message: 'Username is required' }],
+    emailAddress: [{ required: true, message: 'Email is required' }],
     
   };
   

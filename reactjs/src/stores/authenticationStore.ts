@@ -16,24 +16,29 @@ class AuthenticationStore {
 
   @action
   public async login(model: LoginModel) {
+  
     let result = await tokenAuthService.authenticate({
       userNameOrEmailAddress: model.userNameOrEmailAddress,
       password: model.password,
       rememberClient: model.rememberMe,
-    });
-    var tokenExpireDate = model.rememberMe ? new Date(new Date().getTime() + 1000 * result.expireInSeconds) : undefined;
-    abp.auth.setToken(result.accessToken, tokenExpireDate);
-    abp.utils.setCookieValue(AppConsts.authorization.encrptedAuthTokenName, result.encryptedAccessToken, tokenExpireDate, abp.appPath);
-    abp.utils.setCookieValue(AppConsts.User.UserId, result.userId.toString(), tokenExpireDate, abp.appPath);
-    
-    
+    });        
+    if(result.ErrorMessage != 'Invalid username or password!'){
+      var tokenExpireDate = model.rememberMe ? new Date(new Date().getTime() + 1000 * result.expireInSeconds) : undefined;
+      abp.auth.setToken(result.accessToken, tokenExpireDate);
+      abp.utils.setCookieValue(AppConsts.authorization.encrptedAuthTokenName, result.encryptedAccessToken, tokenExpireDate, abp.appPath);
+      abp.utils.setCookieValue(AppConsts.User.UserId, result.userId.toString(), tokenExpireDate, abp.appPath);
+                                          
+    }
+    return result;  
   }
 
   @action
   logout() {
     localStorage.clear();
     sessionStorage.clear();
-    abp.auth.clearToken();
+    abp.auth.clearToken();    
+    abp.utils.deleteCookie(AppConsts.authorization.encrptedAuthTokenName, abp.appPath);
+    abp.utils.deleteCookie(AppConsts.User.UserId, abp.appPath);
   }
 }
 export default AuthenticationStore;

@@ -11,10 +11,11 @@ import UserStore from 'src/stores/userStore';
 import { observer, inject } from 'mobx-react';
 import { FormComponentProps } from 'antd/lib/form';
 import { RouteComponentProps } from 'react-router-dom';
-import NewsFeeds from 'src/components/NewsFeeds';
-import NewsFeedsWithOutLogin from 'src/components/NewsFeedsWithOutLogin';
-import AppConsts from 'src/lib/appconst';
+//import NewsFeeds from 'src/components/NewsFeeds';
+import NewsFeedsWithOutLoginDesktop from 'src/components/NewsFeedsWithOutLoginDesktop';
+//import AppConsts from 'src/lib/appconst';
 import { searchUserInput } from 'src/services/user/dto/searchUserInput';
+import AppConsts from 'src/lib/appconst';
 
 //declare let google: any;
 //import {google} from '@types/googlemaps';
@@ -29,12 +30,13 @@ import { searchUserInput } from 'src/services/user/dto/searchUserInput';
 
 
 
-export interface IDesktop_LoginProps extends FormComponentProps,RouteComponentProps {
+export interface IDesktop_LoginProps extends FormComponentProps, RouteComponentProps {
     userStore: UserStore;
 }
 
 export interface IDesktop_LoginState {
     userId: number;
+    isDisplay: boolean;
 }
 
 //  const confirm = Modal.confirm;
@@ -47,35 +49,87 @@ class Desktop_Login extends AppComponentBase<IDesktop_LoginProps, IDesktop_Login
 
     state = {
         userId: 0,
+        isDisplay:true,
     };
 
     handleSearch = async (e: any) => {
         e.preventDefault();
         await this.props.form.validateFields(async (err: any, values: searchUserInput) => {
             if (err) {
-                alert('validation failed')
-
+                alert('Please enter text to search')
             } else {
-               
+
+                
                 if (this.state.userId == 0) {
-                    
-                    await this.props.userStore.search(values);
-                   // this.props.history.push("/user/searchresult");
-                   
-                     this.props.history.push("/searchresult?searchkey="+values.searchText);
+
+                    this.props.history.push("/searchresult?searchkey=" + values.searchText);
+                    // if (Number(values.searchText)) {
+                    //     // debugger;
+                    //     // await this.props.userStore.search(values);
+                    //     // var lat = 0;
+                    //     // var lng = 0;;            
+                    //     // this.props.userStore.SearchResult.map((item, key) => {
+                    //     //     alert(JSON.stringify(item));
+                    //     //      lat = item.geometry!.location!.lat();
+                    //     //      lng = item.geometry!.location!.lng();
+                    //     // })
+                    //     // var myObject = {} as searchUserInput;
+                    //     // myObject.searchText = '';
+                    //     // myObject.lat = lat;
+                    //     // myObject.lng = lng;
+                        
+                        
+
+                    //    // await this.props.userStore.NearBySearchByZipCodeText(myObject);   
+                    //     //this.props.history.push("/searchresult?searchkey=" + values.searchText);                 
+                    // }else{
+                    //     //await this.props.userStore.search(values);
+                    //     // this.props.history.push("/user/searchresult");
+                    //     this.props.history.push("/searchresult?searchkey=" + values.searchText);
+                    // }   
+                                     
                 }
+                //var aa = this.getLatLngByZipcode('54000');
+                //alert(aa);
             }
         });
-
-        
     };
+
+    handleNearBySearch = async (e: any) => {
+        e.preventDefault();
+
+        // if (err) {
+        //     alert('validation failed')
+        // } else {
+        if (this.state.userId == 0) {
+
+            // var myObject = {} as searchUserInput;
+            // myObject.searchText = '';
+            // await this.props.userStore.NearBySearch(myObject);
+            this.props.history.push("/searchresult");
+        
+        }
+        //var aa = this.getLatLngByZipcode('54000');
+        //alert(aa);
+        // }
+    };
+
+
+    async componentWillMount() {
+        $("#loading").show();
+        if (abp.utils.getCookieValue(AppConsts.User.UserId) != null) {
+         this.setState({ isDisplay : false})
+        }
+      }
+
 
     render() {
         const { getFieldDecorator } = this.props.form;
-         //alert('Final' + this.props.userStore.SearchResult);
+        $("#loading").hide();
         return (
 
             <div>
+
                 {/* <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwjbZH91bjIqgbDFvsYHZ1vpKJME89kZQ&libraries=places&callback=initMap" async defer>
 
                 </script> */}
@@ -88,8 +142,9 @@ class Desktop_Login extends AppComponentBase<IDesktop_LoginProps, IDesktop_Login
                                     <p> PBR&amp;B single-origin coffee gluten-free McSweeney's banjo, bicycle rights food truck gastropub vinyl four loko umami +1.</p>
                                 </div>
 
-                                {(abp.utils.getCookieValue(AppConsts.User.UserId) != null) ? <NewsFeeds {...this.props} /> : <NewsFeedsWithOutLogin {...this.props} /> }
+                                {/* {(abp.utils.getCookieValue(AppConsts.User.UserId) != null) ? <NewsFeeds {...this.props} /> : <NewsFeedsWithOutLogin {...this.props} /> } */}
 
+                                <NewsFeedsWithOutLoginDesktop {...this.props} />
 
                                 {/* <div className="sidebar-tabs">
                                     <div className="sidebar_heading"><h3>Feed</h3></div>
@@ -172,30 +227,37 @@ class Desktop_Login extends AppComponentBase<IDesktop_LoginProps, IDesktop_Login
                                     <div className="row">
                                         <div className="col-md-12">
                                             <div className="input-group desktop_login form_lablel">
-                                                <label htmlFor="html">Search by bean, cafe name, or zipcode</label>
+                                                {/* <label htmlFor="html">Search by bean, cafe name, or zipcode</label> */}
                                                 {/* <input type="search" placeholder="" className="form-control text-center" /> */}
                                                 {getFieldDecorator('searchText', { rules: rules.searchText })(
-                                                    <input type="search" placeholder="" className="form-control text-center" />
+                                                    <input type="search" placeholder="Search by bean, cafe name, or zipcode" className="form-control text-center" />
                                                 )}
                                             </div>
-                                            <button className="btn-web m-t60">Search</button>
+                                            <button className="btn-web m-t30">search</button>
                                         </div>
                                     </div>
                                 </form>
-                                <div className="nearby">
-                                    <h3 className="m-t50 m-b50">or</h3>
-                                    <h3 className="m-b50"><i className="fas fa-map-marker-alt" /> View nearby cafes</h3>
-                                    <h3><a onClick={() => this.props.history.push("/register")}>Register</a> or <a onClick={() => this.props.history.push("/login")}>Log in</a> to track your favorite coffees</h3>
-                                </div>
+                             
+                              {this.state.isDisplay == true ? <div className="nearby">
+                                    <h3 className="m-t50 m-b50">or</h3>                                    
+                                    <h3 onClick={this.handleNearBySearch} className="m-b50"><i className="fas fa-map-marker-alt" /> View nearby cafes</h3>
+                                    <h3><a onClick={() => this.props.history.push("/register")}>Register</a> or <a onClick={() => this.props.history.push("/login")}>log in</a> to track your favorite coffees</h3>
+                                </div> : <div className="nearby">
+                                    <h3 className="m-t50 m-b50">or</h3>                                    
+                                    <h3 onClick={this.handleNearBySearch} className="m-b50"><i className="fas fa-map-marker-alt" /> View nearby cafes</h3>                                    
+                                </div>}
+
+                                {/* <div className="nearby">
+                                    <h3 className="m-t50 m-b50">or</h3>                                    
+                                    <h3 onClick={this.handleNearBySearch} className="m-b50"><i className="fas fa-map-marker-alt" /> View nearby cafes</h3>
+                                    <h3><a onClick={() => this.props.history.push("/register")}>Register</a> or <a onClick={() => this.props.history.push("/login")}>log in</a> to track your favorite coffees</h3>
+                                </div> */}
                             </div>
                         </div>
                     </div>
                 </main>
 
             </div>
-
-
-
 
         );
     }

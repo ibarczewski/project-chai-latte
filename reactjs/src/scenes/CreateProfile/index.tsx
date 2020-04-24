@@ -18,6 +18,7 @@ import rules from './index.validation';
 import { GetDrinkLogPrefrences } from 'src/services/user/dto/GetDrinkLogPrefrences';
 import NewsFeeds from 'src/components/NewsFeeds';
 
+
 export interface ICreateProfileProps extends FormComponentProps, searchUserInput, RouteComponentProps {
   userStore: UserStore;
 }
@@ -83,15 +84,19 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
       await this.LoadUser({ id: Number(abp.utils.getCookieValue(AppConsts.User.UserId)) });
       this.state.userId = Number(abp.utils.getCookieValue(AppConsts.User.UserId));
       await this.props.userStore.GetDrinkOption();
-      
+
       this.forceUpdate();
-     this.InitialdrinkPreferenceValue(this.UserProfile.drinkPreferenceId)
-     this.InitialdrinkLogPreferenceValue(this.UserProfile.drinkLogPreferenceId)
-      $('#ImageIDToDisplay').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
-      $('#ImageIDToDisplayProfile').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
+      this.InitialdrinkPreferenceValue(this.UserProfile.drinkPreferenceId)
+      this.InitialdrinkLogPreferenceValue(this.UserProfile.drinkLogPreferenceId)
+     // $('#ImageIDToDisplay').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
       
-      this.state.SelectedFile = "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage;
-      this.state.ImageName = this.UserProfile.ImageName ? this.UserProfile.ImageName : '';
+      $('#ImageIDToDisplay').attr('src', AppConsts.remoteServiceBaseUrl + "ProfileImages/" + this.UserProfile.userImageName);      
+
+
+      //$('#ImageIDToDisplayProfile').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
+
+     // this.state.SelectedFile = "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage;
+      //this.state.ImageName = this.UserProfile.ImageName ? this.UserProfile.ImageName : '';
       this.setState({ isChecked: this.UserProfile.isPrivate })
     }
   }
@@ -99,7 +104,7 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
   handleCreate = async (e: any) => {
     e.preventDefault();
     await this.props.form.validateFields(async (err: any, values: any) => {
-      if (err) {       
+      if (err) {
         return;
       } else {
         if (this.state.userId == 0) {
@@ -107,9 +112,7 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
           await this.props.userStore.create(values);
 
         } else {
-
-        debugger;
-
+      
           var drinkPreferenceId = $("#drinkPreferenceId").val()
           var drinkLogPreferenceId = $("#drinkLogPreferenceId").val()
 
@@ -132,7 +135,7 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
     $("#TextLineDrinkShowTags").css("display", "none");
   }
   SelectDrinkTags = (e) => {
-    debugger;
+   
     var CurrentanchorId = e.target.id
     var Achildrens = $("#" + CurrentanchorId);
     var DrinkOptionId = Achildrens[0].attributes[1].value;
@@ -148,11 +151,11 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
     }
     else {
       childrens.each(function (index, value) {
-      
+
         if (CurrentanchorId == ("DrinkanchorId" + index)) {
           $("#DrinkanchorId" + index).addClass("active");
         } else {
-          
+
           $("#DrinkanchorId" + index).css("display", "none");
         }
       });
@@ -171,7 +174,7 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
     var childrens = $("#dvDrinkShowTags").children();
     childrens.each(function (index, value) {
       var GetItem = $("#DrinkanchorId" + index);
-      var DrinkOptionId = GetItem[0].attributes[1].value        
+      var DrinkOptionId = GetItem[0].attributes[1].value
       if (DrinkOptionId == Id) {
         $("#DrinkanchorId" + index).removeAttr("style");
         $("#DrinkanchorId" + index).addClass("active");
@@ -221,8 +224,8 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
     $("#TextLineMilkShowTags").css("display", "none");
     var childrens = $("#dvMilkShowTags").children();
     childrens.each(function (index, value) {
-      var GetItem = $("#DrinkanchorId" + index);
-      var DrinkOptionId = GetItem[0].attributes[1].value 
+      var GetItem = $("#MilkanchorId" + index);
+      var DrinkOptionId = GetItem[0].attributes[1].value
       if (DrinkOptionId == Id) {
         $("#MilkanchorId" + index).removeAttr("style");
         $("#MilkanchorId" + index).addClass("active");
@@ -285,15 +288,13 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
 
     const { getFieldDecorator } = this.props.form;
 
-
     if (!this.UserProfile || !this.props.userStore.DrinkOptionsResult || !this.state.DrinkLogPreferenceResult) {
       return (
         <div>
         </div>)
     } else
+    this.props.userStore.ChangeLoader(false);
       return (
-
-
         <div>
 
           <main id="main">
@@ -384,12 +385,12 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
                           {this.props.userStore.DrinkOptionsResult.map((item, key) =>
                             <a id={"DrinkanchorId" + key} onClick={this.SelectDrinkTags} itemID={item.id.toString()}> {item.name}
                             </a>
-                          )}                        
-                       </div>
-                        {getFieldDecorator('drinkPreferenceId')(
-                            <input type="text" style={{ display: 'none' }} className="form-control" />
                           )}
-                        
+                        </div>
+                        {getFieldDecorator('drinkPreferenceId')(
+                          <input type="text" style={{ display: 'none' }} className="form-control" />
+                        )}
+
                       </div>
                       <div className="form-group">
                         <label>My Drink Log Preference:</label>
@@ -403,20 +404,18 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
                         <input readOnly id="TextLineMilkShowTags" onClick={this.ShowLogPreferenceTags} type="text" placeholder="" className="form-control" />
                         <div id="dvMilkShowTags" style={{ display: 'none' }} className="rate_select">
                           {this.state.DrinkLogPreferenceResult.map((item, key) =>
-                            <a id={"MilkanchorId" + item.id.toString()} onClick={this.SelectLogPreferenceTags} itemID={item.id.toString()}> {item.name}
+                            <a id={"MilkanchorId" + key} onClick={this.SelectLogPreferenceTags} itemID={item.id.toString()}> {item.name}
                             </a>
                           )}
-                          </div>
-                          {getFieldDecorator('drinkLogPreferenceId')(
-                            <input type="text" style={{ display: 'none' }} className="form-control" />
-                          )}                      
+                        </div>
+                        {getFieldDecorator('drinkLogPreferenceId')(
+                          <input type="text" style={{ display: 'none' }} className="form-control" />
+                        )}
                       </div>
-
-                      <div className="form-group">
-                        <label>IsPrivate</label>
+                      <div className="form-group check_box">                         
                         <input type="checkbox" checked={this.state.isChecked} onChange={this.toggleChange} id="idcheckbox" />
+                        <label htmlFor="idcheckbox">IsPrivate</label>
                       </div>
-
                       {/* <input id="UserImageID" type="hidden" /> */}
 
                       <div className="form-group text-center">
@@ -426,7 +425,9 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
                   </div>
                 </div>
 
-                <NewsFeeds {...this.props} />
+                <div className="col-lg-5 hidden-md">
+                  <NewsFeeds {...this.props} />
+                </div>
 
                 {/* <div className="col-lg-5 hidden-md">
                   <div className="sidebar-tabs">

@@ -97,6 +97,22 @@ export const userRouter: any = [
     showInMenu: true,
     component: LoadableComponent(() => import('src/scenes/Dashboard')),
   },
+  {
+    path: '/logout',
+    permission: '',
+    title: 'Logout',
+    name: 'logout',
+    icon: 'info-circle',
+    showInMenu: false,
+    component: LoadableComponent(() => import('src/components/Logout')),
+  },
+  {
+    path: '/NewsFeeds',
+    name: 'NewsFeeds',
+    title: 'NewsFeeds',
+    component: LoadableComponent(() => import('src/scenes/NewsFeeds')),
+    showInMenu: false,
+  }
 ];
 
 export const appRouters: any = [

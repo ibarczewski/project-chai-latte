@@ -23,6 +23,7 @@ export interface GetSearchOutputResults {
     utc_offset?: number;
     vicinity?: string;
     website?: string;
+    distance?:Number;
   }
   
 
@@ -48,21 +49,57 @@ export interface LatLngBounds {
     south: number;
     west: number;
 }
+
 export interface LatLng {
     /**
-     * Latitude in degrees. Values will be clamped to the range [-90, 90]. This
-     * means that if the value specified is less than -90, it will be set to
-     * -90. And if the value is greater than 90, it will be set to 90.
+     * Creates a LatLng object representing a geographic point.
+     * Note the ordering of latitude and longitude.
+     * @param lat Latitude is specified in degrees within the range [-90, 90].
+     * @param lng Longitude is specified in degrees within the range [-180,
+     *     180].
+     * @param noWrap Set noWrap to true to enable values outside of this range.
      */
-    lat: number;
+    constructor(lat: number, lng: number, noWrap?: boolean);
     /**
-     * Longitude in degrees. Values outside the range [-180, 180] will be
-     * wrapped so that they fall within the range. For example, a value of -190
-     * will be converted to 170. A value of 190 will be converted to -170. This
-     * reflects the fact that longitudes wrap around the globe.
+     * Creates a LatLng object representing a geographic point.
+     * @param literal Object literal.
+     * @param noWrap Set noWrap to true to enable values outside of this range.
      */
-    lng: number;
+   // constructor(literal: LatLngLiteral, noWrap?: boolean);
+    /** Comparison function. */
+    //equals(other: LatLng): boolean;
+    /** Returns the latitude in degrees. */
+    lat(): number;
+    /** Returns the longitude in degrees. */
+    lng(): number;
+    /** Converts to string representation. */
+    toString(): string;
+    /**
+     * Returns a string of the form "lat,lng". We round the lat/lng values to 6
+     * decimal places by default.
+     */
+    toUrlValue(precision?: number): string;
+    /**
+     * Converts to JSON representation. This function is intended to be used
+     * via JSON.stringify.
+     */
+    //toJSON(): LatLngLiteral;
 }
+// export interface LatLng {
+//     /**
+//      * Latitude in degrees. Values will be clamped to the range [-90, 90]. This
+//      * means that if the value specified is less than -90, it will be set to
+//      * -90. And if the value is greater than 90, it will be set to 90.
+//      */
+//     lat: number;
+//     /**
+//      * Longitude in degrees. Values outside the range [-180, 180] will be
+//      * wrapped so that they fall within the range. For example, a value of -190
+//      * will be converted to 170. A value of 190 will be converted to -170. This
+//      * reflects the fact that longitudes wrap around the globe.
+//      */
+//     lng: number;
+// }
 export interface OpeningHours {
     open_now: boolean;
     periods: OpeningPeriod[];

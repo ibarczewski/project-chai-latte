@@ -16,6 +16,67 @@ import { getRoasterOptions } from 'src/services/user/dto/getRoasterOptions';
 import AppConsts from 'src/lib/appconst';
 import NewsFeeds from 'src/components/NewsFeeds';
 
+import Defaultcup0 from "src/Content/images/cup-0.png";
+import Defaultcup25 from "src/Content/images/cup-25.png";
+import Defaultcup50 from "src/Content/images/cup-50.png";
+import Defaultcup75 from "src/Content/images/cup-75.png";
+import Defaultcup100 from "src/Content/images/cup-100.png";
+
+
+import cup0 from "src/Content/images/cup-0.png";
+import cup25 from "src/Content/images/cup-25.png";
+import cup50 from "src/Content/images/cup-50.png";
+import cup75 from "src/Content/images/cup-75.png";
+import cup100 from "src/Content/images/cup-100.png";
+
+
+// import cup0 from "src/Content/images/0.png";
+
+// import cup025 from "src/Content/images/0.25.png";
+
+// import cup05 from "src/Content/images/0.5.png";
+
+// import cup075 from "src/Content/images/0.75.png";
+
+// import cup1 from "src/Content/images/1.png";
+
+// import cup125 from "src/Content/images/1.25.png";
+
+// import cup15 from "src/Content/images/1.5.png";
+
+// import cup175 from "src/Content/images/1.75.png";
+
+// import cup2 from "src/Content/images/2.png";
+
+// import cup225 from "src/Content/images/2.25.png";
+
+// import cup25 from "src/Content/images/2.5.png";
+
+// import cup275 from "src/Content/images/2.75.png";
+
+// import cup3 from "src/Content/images/3.png";
+
+// import cup325 from "src/Content/images/3.25.png";
+
+// import cup35 from "src/Content/images/3.5.png";
+
+// import cup375 from "src/Content/images/3.75.png";
+
+// import cup4 from "src/Content/images/4.png";
+
+// import cup425 from "src/Content/images/4.25.png";
+
+// import cup45 from "src/Content/images/4.5.png";
+
+// import cup475 from "src/Content/images/4.75.png";
+
+// import cup5 from "src/Content/images/5.png";
+
+
+
+
+
+
 export interface IRatingProps extends FormComponentProps, searchUserInput, RouteComponentProps {
   userStore: UserStore;
 }
@@ -26,6 +87,29 @@ export interface IRatingState {
   DrinkOptionId: string;
   MilkOptionsResult: getMilkOptions[];
   RoasterOptionsResult: getRoasterOptions[];
+  Imagesource: string;
+  isShowMilk: boolean;
+  // 0: string;
+  // 0.25: string;
+  // 0.5: string;
+  // 0.75: string;
+  // 1: string;
+  // 1.25: string;
+  // 1.5: string;
+  // 1.75: string;
+  // 2: string;
+  // 2.25: string;
+  // 2.5: string;
+  // 2.75: string;
+  // 3: string;
+  // 3.25: string;
+  // 3.5: string;
+  // 3.75: string;
+  // 4: string;
+  // 4.25: string;
+  // 4.5: string;
+  // 4.75: string;
+  // 5: string;
 
 }
 
@@ -39,12 +123,14 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
   searchUserInput: searchUserInput;
   searchkey: string | null;
   placeid: string | null;
+  placename: string | null;
   //BeanOptionsResult: getBeanOptions[];
 
   state = {
     userId: 0,
     IsShow: true,
     DrinkOptionId: "",
+    isShowMilk: false,
     MilkOptionsResult: [
       {
         "name": "Half and Half",
@@ -84,7 +170,31 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
         "name": "Light Roast",
         "id": 4
       }
-    ]
+    ],
+    Imagesource: "0",
+    // 0: cup0,
+    // 0.25: cup025,
+    // 0.5: cup05,
+    // 0.75: cup075,
+    // 1: cup1,
+    // 1.25: cup125,
+    // 1.5: cup15,
+    // 1.75: cup175,
+    // 2: cup2,
+    // 2.25: cup225,
+    // 2.5: cup25,
+    // 2.75: cup275,
+    // 3: cup3,
+    // 3.25: cup325,
+    // 3.5: cup35,
+    // 3.75: cup375,
+    // 4: cup4,
+    // 4.25: cup425,
+    // 4.5: cup45,
+    // 4.75: cup475,
+    // 5: cup5,
+
+
   };
 
 
@@ -107,6 +217,7 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
 
     await this.props.userStore.GetDrinkOption();
     await this.props.userStore.GetBeanOption();
+    this.placename = this.getParameterByName('placename', window.location.href);
 
     this.forceUpdate();
   }
@@ -119,9 +230,17 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
     $("#TextLineDrinkShowTags").css("display", "none");
   }
   SelectDrinkTags = (e) => {
+    debugger;
     var CurrentanchorId = e.target.id
     var Achildrens = $("#" + CurrentanchorId);
     var DrinkOptionId = Achildrens[0].attributes[1].value;
+    var isShowMilk = Achildrens[0].attributes[2].value;
+    if (isShowMilk == "Y") {
+      this.setState({ isShowMilk: true })
+    } else {
+      this.setState({ isShowMilk: false })
+
+    }
     console.log(DrinkOptionId);
     var childrens = $("#dvDrinkShowTags").children();
     var isclass = $("#" + CurrentanchorId).hasClass('active');
@@ -246,46 +365,222 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
   }
   // end
 
+  ShowRatingSlider = event => {
+
+    $("#RatingFirstDiv").attr("style", "display:none");
+    $(".RatingFirstclass").attr("style", "display:none");
+
+
+    //$('#RatingSlider').removeAttr("style");
+    $('#RatingSlider').attr("style", "display:block");
+  }
+
+  ShowRatingFirstDiv = event => {
+    $("#RatingFirstDiv").attr("style", "display:block");
+    $(".RatingFirstclass").attr("style", "display:block");
+
+    $('#RatingSlider').attr("style", "display:none");
+    var SelectedRatingPoint = Number(this.state.Imagesource);
+    var ratingstarsHTML = "";
+
+    if (SelectedRatingPoint == 0.0) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 0.25) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup25 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    }
+    else if (SelectedRatingPoint == 0.50) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup50 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 0.75) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup75 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 1.0) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 1.25) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup25 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 1.50) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup50 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 1.75) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup75 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 2.0) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 2.25) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup25 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 2.50) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup50 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 2.75) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup75 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 3.0) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 3.25) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup25 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 3.50) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup50 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 3.75) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup75 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 4.0) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup0 + ' />';
+    } else if (SelectedRatingPoint == 4.25) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup25 + ' />';
+    } else if (SelectedRatingPoint == 4.50) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup50 + ' />';
+    } else if (SelectedRatingPoint == 4.75) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup75 + ' />';
+    } else if (SelectedRatingPoint == 5.0) {
+      ratingstarsHTML += '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />' +
+        '<img alt="rating" src= ' + cup100 + ' />';
+    }
+
+
+    $("#Iddefault-star-ratings").html(ratingstarsHTML);
+
+
+  }
+
+  updateImageSource = event => {
+
+    //var SliderValue = $(this).val();
+    $("#sliderStatus").html(event.target.value);
+    //this.setState({ Imagesource: this.state[event.target.value] });
+    this.setState({ Imagesource: event.target.value });
+
+    // $('#sliderStatus').html($(this).val());                   
+    // $("#img").attr("src", imageUrl[SliderValue]);
+  }
+
 
   handleSubmit = async (e: any) => {
     e.preventDefault();
-
-
+    debugger;
     await this.props.form.validateFields(async (err: any, values: any) => {
       if (!err) {
-
-
         this.placeid = this.getParameterByName('placeid', window.location.href);
-        var result = await this.props.userStore.IsRatingExistByPlace(values, this.placeid,Number(abp.utils.getCookieValue(AppConsts.User.UserId)));
-        if (result != undefined && result != null) {
-          if (result.id > 0) {
-            var DrinkOptionId = $("#DrinkOptionId").val()
-            var BeanTypeId = $("#BeanTypeId").val()
-            var MilkTypeId = $("#MilkTypeId").val()
-            var RoasterTypeId = $("#RoasterTypeId").val()
+        this.placename = this.getParameterByName('placename', window.location.href);
 
-           var AddMoreRatingResult = await this.props.userStore.AddMoreRating(values, DrinkOptionId, BeanTypeId, MilkTypeId, RoasterTypeId, this.placeid);
+        var RatingPoints = this.state.Imagesource;
+        var result = await this.props.userStore.IsRatingExistByPlace(values, this.placeid, Number(abp.utils.getCookieValue(AppConsts.User.UserId)));
 
-            var IsMoveToChangeRatingResult = await this.props.userStore.IsMoveToChangeRatingScreen(values, this.placeid,Number(abp.utils.getCookieValue(AppConsts.User.UserId)),DrinkOptionId, BeanTypeId);
+        if (result.result > 0) {
+          var DrinkOptionId = $("#DrinkOptionId").val()
+          var BeanTypeId = $("#BeanTypeId").val()
+          var MilkTypeId = $("#MilkTypeId").val()
+          var RoasterTypeId = $("#RoasterTypeId").val()
+          var RatingId = result.result;
 
-            if(IsMoveToChangeRatingResult == true){
-              this.props.history.push("/ChangeRating?placeid=" + this.placeid+ "?Ratingid=" + AddMoreRatingResult.id+ "?DrinkOptionId=" + DrinkOptionId+ "?BeanTypeId=" + BeanTypeId);
-            }else{
-              this.props.history.push("/AnotherRating?placeid=" + this.placeid);
-            }              
-          } else {
-            var DrinkOptionId = $("#DrinkOptionId").val()
-            var BeanTypeId = $("#BeanTypeId").val()
-            var MilkTypeId = $("#MilkTypeId").val()
-            var RoasterTypeId = $("#RoasterTypeId").val()
+          var AddMoreRatingResult = await this.props.userStore.AddMoreRating(values, DrinkOptionId, BeanTypeId, MilkTypeId, RoasterTypeId, this.placeid, RatingId, RatingPoints, this.placename);
+          if (AddMoreRatingResult.result != "") {
+            var arr = AddMoreRatingResult.result.split("-");
+            var currentmoreratingid = arr[0];
+            var ratingPoints = arr[1];
 
-            await this.props.userStore.AddRating(values, DrinkOptionId, BeanTypeId, MilkTypeId, RoasterTypeId, this.placeid);
+            var IsMoveToChangeRatingResult = await this.props.userStore.IsMoveToChangeRatingScreen(values, this.placeid, Number(abp.utils.getCookieValue(AppConsts.User.UserId)), DrinkOptionId, BeanTypeId);
+            debugger
+            if (IsMoveToChangeRatingResult.result != "") {
+              var splits = IsMoveToChangeRatingResult.result.split("-");
+              if (splits[0] == "rating") {
+                var ratingId = splits[1];
+                this.props.history.push("/ChangeRating?placeid=" + this.placeid + "&previousratingid=" + ratingId + "&DrinkOptionId=" + DrinkOptionId + "&BeanTypeId=" + BeanTypeId + "&currentmoreratingid=" + currentmoreratingid + "&ratingpoints=" + ratingPoints);
+              } else {
+                var moreratingId = splits[1];
+                this.props.history.push("/ChangeRating?placeid=" + this.placeid + "&previousmoreratingId=" + moreratingId + "&DrinkOptionId=" + DrinkOptionId + "&BeanTypeId=" + BeanTypeId + "&currentmoreratingid=" + currentmoreratingid + "&ratingpoints=" + ratingPoints);
+              }
 
-            this.props.history.push("/AnotherRating?placeid=" + this.placeid);
+            } else {
+              this.props.history.push("/AnotherRating?placeid=" + this.placeid + "&currentmoreratingid=" + AddMoreRatingResult.result);
+            }
           }
+
+        } else {
+          var DrinkOptionId = $("#DrinkOptionId").val()
+          var BeanTypeId = $("#BeanTypeId").val()
+          var MilkTypeId = $("#MilkTypeId").val()
+          var RoasterTypeId = $("#RoasterTypeId").val()
+
+          var AddRatingResult = await this.props.userStore.AddRating(values, DrinkOptionId, BeanTypeId, MilkTypeId, RoasterTypeId, this.placeid, RatingPoints, this.placename);
+
+          this.props.history.push("/AnotherRating?placeid=" + this.placeid + "&currentratingid=" + AddRatingResult.result);
         }
-
-
       }
     });
   };
@@ -298,17 +593,23 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
         <div>
         </div>)
     } else {
+
+      Defaultcup0;
+      Defaultcup25;
+      Defaultcup50;
+      Defaultcup75;
+      Defaultcup100;
+      this.props.userStore.ChangeLoader(false);
+
       return (
-
-
         <div>
 
-          <main id="main">
-            <div className="container-fluid">
+          <main id="main" className="RatingFirstclass">
+            <div className="container-fluid" id="RatingFirstDiv">
               <div className="row">
                 <div className="col-lg-7 col-md-12 col-sm-12">
                   <div className="heading">
-                    <h2>Foxtail Farmhouse - Winter Park</h2>
+                    <h2>{this.placename}</h2>
                     <h2>Rate a bean</h2>
                   </div>
                   <div className="tab_contentarea rating_form">
@@ -318,13 +619,13 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
                         <input readOnly id="TextLineDrinkShowTags" onClick={this.ShowDrinkTags} type="text" placeholder="" className="form-control" />
                         <div id="dvDrinkShowTags" style={{ display: 'none' }} className="rate_select">
                           {this.props.userStore.DrinkOptionsResult.map((item, key) =>
-                            <a id={"DrinkanchorId" + key} onClick={this.SelectDrinkTags} itemID={item.id.toString()}> {item.name}
+                            <a id={"DrinkanchorId" + key} onClick={this.SelectDrinkTags} itemID={item.id.toString()} itemType={item.type.toString()}> {item.name}
                             </a>
                           )}
-                          </div>
-                          {getFieldDecorator('DrinkOptionId')(
-                            <input type="text" style={{ display: 'none' }} className="form-control" />
-                          )}                        
+                        </div>
+                        {getFieldDecorator('DrinkOptionId')(
+                          <input type="text" style={{ display: 'none' }} className="form-control" />
+                        )}
                       </div>
                       <div className="form-group">
                         <label>Bean Type:</label>
@@ -332,13 +633,14 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
                         <input readOnly id="TextLineBeanShowTags" onClick={this.ShowBeanTags} type="text" placeholder="" className="form-control" />
                         <div id="dvBeanShowTags" style={{ display: 'none' }} className="rate_select">
                           {this.props.userStore.BeanOptionsResult.map((item, key) =>
-                            <a id={"BeananchorId" + item.id.toString()} onClick={this.SelectBeanTags} itemID={item.id.toString()}> {item.name}
+                            <a id={"BeananchorId" + key} onClick={this.SelectBeanTags} itemID={item.id.toString()}> {item.name}
                             </a>
                           )}
-                          {getFieldDecorator('BeanTypeId')(
-                            <input type="text" style={{ display: 'none' }} className="form-control" />
-                          )}
                         </div>
+                        {getFieldDecorator('BeanTypeId')(
+                          <input type="text" style={{ display: 'none' }} className="form-control" />
+                        )}
+
 
                       </div>
                       <div className="form-group">
@@ -359,21 +661,40 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
                           <input type="text" className="form-control" />
                         )}
                       </div>
-                      <div className="form-group">
+
+{this.state.isShowMilk ? 
+  <div className="form-group">
                         <label>Milk Type:</label>
                         {/* MilkTypeId */}
 
                         <input readOnly id="TextLineMilkShowTags" onClick={this.ShowMilkTags} type="text" placeholder="" className="form-control" />
                         <div id="dvMilkShowTags" style={{ display: 'none' }} className="rate_select">
                           {this.state.MilkOptionsResult.map((item, key) =>
-                            <a id={"MilkanchorId" + item.id.toString()} onClick={this.SelectMilkTags} itemID={item.id.toString()}> {item.name}
+                            <a id={"MilkanchorId" + key} onClick={this.SelectMilkTags} itemID={item.id.toString()}> {item.name}
                             </a>
                           )}
-                          </div>
-                          {getFieldDecorator('MilkTypeId')(
-                            <input type="text" style={{ display: 'none' }} className="form-control" />
+                        </div>
+                        {getFieldDecorator('MilkTypeId')(
+                          <input type="text" style={{ display: 'none' }} className="form-control" />
+                        )}
+                      </div> : ''
+}
+
+                      {/* <div className="form-group">
+                        <label>Milk Type:</label>
+                       
+
+                        <input readOnly id="TextLineMilkShowTags" onClick={this.ShowMilkTags} type="text" placeholder="" className="form-control" />
+                        <div id="dvMilkShowTags" style={{ display: 'none' }} className="rate_select">
+                          {this.state.MilkOptionsResult.map((item, key) =>
+                            <a id={"MilkanchorId" + key} onClick={this.SelectMilkTags} itemID={item.id.toString()}> {item.name}
+                            </a>
                           )}
-                      </div>
+                        </div>
+                        {getFieldDecorator('MilkTypeId')(
+                          <input type="text" style={{ display: 'none' }} className="form-control" />
+                        )}
+                      </div> */}
                       <div className="form-group">
                         <label>Roast Type:</label>
                         {/* RoasterType */}
@@ -381,23 +702,34 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
                         <input readOnly id="TextLineRoasterShowTags" onClick={this.ShowRoasterTags} type="text" placeholder="" className="form-control" />
                         <div id="dvRoasterShowTags" style={{ display: 'none' }} className="rate_select">
                           {this.state.RoasterOptionsResult.map((item, key) =>
-                            <a id={"RoasteranchorId" + item.id.toString()} onClick={this.SelectRoasterTags} itemID={item.id.toString()}> {item.name}
+                            <a id={"RoasteranchorId" + key} onClick={this.SelectRoasterTags} itemID={item.id.toString()}> {item.name}
                             </a>
                           )}
-                          {getFieldDecorator('RoasterTypeId')(
-                            <input type="text" style={{ display: 'none' }} className="form-control" />
-                          )}
                         </div>
+                        {getFieldDecorator('RoasterTypeId')(
+                          <input type="text" style={{ display: 'none' }} className="form-control" />
+                        )}
+
 
                       </div>
                       <div className="form-group">
                         <label>Rating:</label>
-                        <input type="text" placeholder="" className="form-control" />
+                        {/* {getFieldDecorator('placeRating')(
+                          <input type="text" className="form-control" />
+                        )} */}
+
+                        <div className="default-star-ratings" id="Iddefault-star-ratings" onClick={this.ShowRatingSlider} >
+                          <img alt="rating" style={{ width: '41px', height:'41px', marginRight: '4px' }} src={Defaultcup0} />
+                          <img alt="rating" style={{ width: '41px', height:'41px', marginRight: '4px' }} src={Defaultcup0} />
+                          <img alt="rating" style={{ width: '41px', height:'41px', marginRight: '4px' }} src={Defaultcup0} />
+                          <img alt="rating" style={{ width: '41px', height:'41px', marginRight: '4px' }} src={Defaultcup0} />
+                          <img alt="rating" style={{ width: '41px', height:'41px', marginRight: '4px' }} src={Defaultcup0} />
+                        </div>
                       </div>
                       <div className="form-group">
                         <label>Barista: </label>
                         {getFieldDecorator('Barista')(
-                          <input type="text" className="form-control" />
+                          <input type="text" placeholder="optional" className="form-control" />
                         )}
                       </div>
                       <div className="form-group textarea_1">
@@ -414,293 +746,56 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
                   </div>
                 </div>
 
-                <NewsFeeds {...this.props} />
-                
-                {/* <div className="col-lg-5 hidden-md">
-                  <div className="sidebar-tabs">
-                    <div className="sidebar_heading"><h3>Feed</h3></div>
-                    <nav>
-                      <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a className="nav-item nav-link active" id="nav-everone-tab" data-toggle="tab" href="#nav-everone" role="tab" aria-controls="nav-everone" aria-selected="true">Everyone</a>
-                        <a className="nav-item nav-link" id="nav-friend-tab" data-toggle="tab" href="#nav-friend" role="tab" aria-controls="nav-friend" aria-selected="false">Friends</a>
-                        <a className="nav-item nav-link" id="nav-mylog-tab" data-toggle="tab" href="#nav-mylog" role="tab" aria-controls="nav-mylog" aria-selected="false">My Logs</a>
-                      </div>
-                    </nav>
-                    <div className="tab-content" id="nav-tabContent">
-                      <div className="tab-pane fade show active" id="nav-everone" role="tabpanel" aria-labelledby="nav-everone-tab">
-                        <div className="tab_contentarea">
-                          <div className="d-table">
-                            <div className="d-table-cell content-cell">
-                              <img alt="" src="images/LoggedOut_Profile.png" />
-                              <p className="font-weight-bold">Andy S.</p>
-                              <p>Feb 2, 2018</p>
-                            </div>
-                            <div className="d-table-cell desc-cell">
-                              <ul className="tab-tag">
-                                <li>Foxtail Farmhouse - Winterpark</li>
-                                <li>Doppio</li>
-                                <li>Chiapas</li>
-                              </ul>
-                              <p>Tasting Notes: Ut enim ad minim veniam, quis nostrud exlorem ipsum dolor
-                                s lorem ipsum dolor s lorem ipsum dolor s lorem ipsum dolor s lorem
-                            ipsum do<a href="#" className="readmore">…read more</a></p>
-                            </div>
-                          </div>
-                          <div className="d-table">
-                            <div className="d-table-cell content-cell">
-                              <img alt="" src="images/LoggedOut_Profile.png" />
-                              <p className="font-weight-bold">Coma</p>
-                              <p>Nov 15, 2018</p>
-                            </div>
-                            <div className="d-table-cell desc-cell">
-                              <ul className="tab-tag">
-                                <li>Coma Coffee</li>
-                              </ul>
-                              <p>Special!! Come try our Minca, Single Origin from Peru at our midtown
-                            location today!</p>
-                            </div>
-                          </div>
-                          <div className="d-table">
-                            <div className="d-table-cell content-cell">
-                              <img alt="" src="images/LoggedOut_Profile.png" />
-                              <p className="font-weight-bold">deltago</p>
-                              <p>Sep 9, 2018</p>
-                            </div>
-                            <div className="d-table-cell desc-cell">
-                              <ul className="tab-tag">
-                                <li>Hopper &amp; Burr</li>
-                                <li>Doppio</li>
-                                <li>Reko</li>
-                              </ul>
-                              <p>Tasting Notes: Light, clean balanced bergamot/tea lorem ipsum dolor
-                                silorem ipsum dolor s lorem ipsum dolor slorem ipsum dolor slorem ipsum
-                                dolor s…
-                            <a href="#" className="readmore">read more</a></p>
-                            </div>
-                          </div>
-                          <div className="d-table">
-                            <div className="d-table-cell content-cell">
-                              <img alt="" src="images/LoggedOut_Profile.png" />
-                              <p className="font-weight-bold">JohnB</p>
-                              <p>Sep 9, 2018</p>
-                            </div>
-                            <div className="d-table-cell desc-cell">
-                              <ul className="tab-tag">
-                                <li>In-sīt Coffee</li>
-                                <li>Macchiato</li>
-                                <li>Supernova Blend</li>
-                              </ul>
-                              <p>Tasting Notes: Aroma of blueberries and citrus. Flavor heavy on the
-                                Ethiopian with blueberry and lemon notes balanced by Colombian dark
-                                chocolate. …read less…
-                            <a href="#" className="readmore">read more</a></p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="tab-pane fade" id="nav-friend" role="tabpanel" aria-labelledby="nav-friend-tab">
-                        <div className="tab_contentarea">
-                          <div className="d-table">
-                            <div className="d-table-cell content-cell">
-                              <img alt="" src="images/LoggedOut_Profile.png" />
-                              <p className="font-weight-bold">atledlorem</p>
-                              <p>Feb 2, 2018</p>
-                            </div>
-                            <div className="d-table-cell desc-cell">
-                              <ul className="tab-tag">
-                                <li>Foxtail Farmhouse - Winterpark</li>
-                                <li>Doppio</li>
-                                <li>Chiapas</li>
-                                <li>
-                                  <div className="star-ratings">
-                                    <img alt="rating" src="images/full cup.png" />
-                                    <img alt="rating" src="images/full cup.png" />
-                                    <img alt="rating" src="images/full cup.png" />
-                                    <img alt="rating" src="images/full cup.png" />
-                                    <img alt="rating" src="images/empty cup.png" />
-                                  </div>
-                                </li>
-                              </ul>
-                              <p>Tasting Notes: Ut enim ad minim veniam, quis nostrud ex…read more<a href="#" className="readmore">…read more</a></p>
-                            </div>
-                          </div>
-                          <div className="d-table">
-                            <div className="d-table-cell content-cell">
-                              <img alt="" src="images/LoggedOut_Profile.png" />
-                              <p className="font-weight-bold">itebsnook</p>
-                              <p>Nov 15, 2018</p>
-                            </div>
-                            <div className="d-table-cell desc-cell">
-                              <ul className="tab-tag">
-                                <li>Reborn Coffee</li>
-                                <li>Espresso Macchiato</li>
-                                <li>Valencia Coffee</li>
-                                <li><div className="star-ratings">
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/empty cup.png" />
-                                </div></li>
-                              </ul>
-                              <p>Tasting Notes: Chocolate really stands out with added…
-                            <a href="#" className="readmore">read more</a>
-                              </p>
-                            </div>
-                          </div>
-                          <div className="d-table">
-                            <div className="d-table-cell content-cell">
-                              <img alt="" src="images/LoggedOut_Profile.png" />
-                              <p className="font-weight-bold">deltago</p>
-                              <p>Sep 9, 2018</p>
-                            </div>
-                            <div className="d-table-cell desc-cell">
-                              <ul className="tab-tag">
-                                <li>Hopper &amp; Burr</li>
-                                <li>Doppio</li>
-                                <li>Reko</li>
-                                <li><div className="star-ratings">
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/empty cup.png" />
-                                </div></li>
-                              </ul>
-                              <p>Tasting Notes: Light, clean balanced bergamot/tea …read more…
-                            <a href="#" className="readmore">read more</a></p>
-                            </div>
-                          </div>
-                          <div className="d-table">
-                            <div className="d-table-cell content-cell">
-                              <img alt="" src="images/LoggedOut_Profile.png" />
-                              <p className="font-weight-bold">JohnB</p>
-                              <p>Sep 9, 2018</p>
-                            </div>
-                            <div className="d-table-cell desc-cell">
-                              <ul className="tab-tag">
-                                <li>In-sīt Coffee</li>
-                                <li>Macchiato</li>
-                                <li>Supernova Blend</li>
-                                <li><div className="star-ratings">
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/empty cup.png" />
-                                </div></li>
-                              </ul>
-                              <p>Tasting Notes: Aroma of blueberries and citrus. Flavor heavy on the Ethiopian with blueberry and lemon notes balanced by Colombian dark chocolate..…
-                            <a href="#" className="readmore">read less…</a></p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="tab-pane fade" id="nav-mylog" role="tabpanel" aria-labelledby="nav-mylog-tab">
-                        <div className="tab_contentarea">
-                          <div className="d-table">
-                            <div className="d-table-cell content-cell">
-                              <p>Nov 22, 2018</p>
-                            </div>
-                            <div className="d-table-cell desc-cell">
-                              <ul className="tab-tag">
-                                <li>In-sīt Coffee</li>
-                                <li>Macchiato</li>
-                                <li>Supernova Blend</li>
-                                <li>
-                                  <div className="star-ratings">
-                                    <img alt="rating" src="images/full cup.png" />
-                                    <img alt="rating" src="images/full cup.png" />
-                                    <img alt="rating" src="images/full cup.png" />
-                                    <img alt="rating" src="images/full cup.png" />
-                                    <img alt="rating" src="images/empty cup.png" />
-                                  </div>
-                                </li>
-                              </ul>
-                              <p>Tasting Notes: Aroma of blueberries and citrus. Flavor heavy on the Ethiopian with blueberry and lemon notes balanced by Colombian dark chocolate.<a href="#" className="readmore">…read less</a></p>
-                            </div>
-                          </div>
-                          <div className="d-table">
-                            <div className="d-table-cell content-cell">
-                              <p>Nov 15, 2018</p>
-                            </div>
-                            <div className="d-table-cell desc-cell">
-                              <ul className="tab-tag">
-                                <li>Reborn Coffee</li>
-                                <li>Espresso Macchiato</li>
-                                <li>Valencia Coffee</li>
-                                <li><div className="star-ratings">
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/empty cup.png" />
-                                </div></li>
-                              </ul>
-                              <p>Tasting Notes: Chocolate really stands out with added
-                            <a href="#" className="readmore">…read more</a>
-                              </p>
-                            </div>
-                          </div>
-                          <div className="d-table">
-                            <div className="d-table-cell content-cell">
-                              <p>Sep 9, 2018</p>
-                            </div>
-                            <div className="d-table-cell desc-cell">
-                              <ul className="tab-tag">
-                                <li>Hopper &amp; Burr</li>
-                                <li>Doppio</li>
-                                <li>Reko</li>
-                                <li><div className="star-ratings">
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/empty cup.png" />
-                                </div></li>
-                              </ul>
-                              <p>Tasting Notes: Light, clean balanced bergamot/tea
-                            <a href="#" className="readmore">…read more</a></p>
-                            </div>
-                          </div>
-                          <div className="d-table">
-                            <div className="d-table-cell content-cell">
-                              <p>Feb 2, 2018</p>
-                            </div>
-                            <div className="d-table-cell desc-cell">
-                              <ul className="tab-tag">
-                                <li>Foxtail Farmhouse - Winterpark</li>
-                                <li>Doppio</li>
-                                <li>Chiapas</li>
-                                <li><div className="star-ratings">
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/full cup.png" />
-                                  <img alt="rating" src="images/empty cup.png" />
-                                </div></li>
-                              </ul>
-                              <p>Tasting Notes: Ut enim ad minim veniam, quis nostrud ex
-                            <a href="#" className="readmore">…read more</a></p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
-
-
+                <div className="col-lg-5 hidden-md">
+                  <NewsFeeds {...this.props} />
+                </div>
               </div>
+
+
             </div>
           </main>
 
 
 
+          <main id="main">
+
+            <div className="container-fluid" id="RatingSlider" style={{ display: 'none' }}>
+              <div className="row">
+                <div className="col-lg-7 col-md-12 col-sm-12">
+                  <div className="heading">
+                    <h2>{this.placename}</h2>
+                    <h2>Rate a bean</h2>
+                  </div>
+                  <div className="tab_contentarea">
+                    {/* <form className="web-form text-center"> */}
+                    <div className="web-form text-center">
+                      <span onClick={this.ShowRatingFirstDiv} style={{ float: 'right', marginRight: '11px', marginTop: '-8px', fontSize: '35px' }}>x</span>
+                      <div className="user-rating">
+                        <span id="sliderStatus">0</span>
+                        <div className="rating-img">
+                          <img src={require(`../../Content/images/${this.state.Imagesource}.png`)} alt="image" id="img" />
+                        </div>
+                        {/* defaultValue={0} */}
+                        <input type="range" id="slider" onChange={this.updateImageSource}  min={0} max={5} step="0.25" />
+                      </div>
+                      <div className="form-group text-center">
+                        <button className="btn-web m-t10 m-b70" onClick={this.ShowRatingFirstDiv} > Done</button>
+                      </div>
+                      {/* </form> */}
+                    </div>
+                  </div>
+                </div>
+                <div className="col-lg-5 hidden-md">
+                  <NewsFeeds {...this.props} />
+                </div>
+
+              </div>
+            </div>
+
+
+          </main>
+
         </div>
-
-
-
 
       );
     }

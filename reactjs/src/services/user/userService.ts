@@ -20,70 +20,173 @@ class UserService {
 
   public async search(searchUserInput: searchUserInput) {
     return new Promise<GetSearchOutputResults[]>((resolve, reject) => {
-     // var results;
+      // var results;
       var map;
       var service;
-      
-     // var pyrmont = new google.maps.LatLng(-33.8665433,151.1956316);
-        var pyrmont = new google.maps.LatLng(85,180);
-  
-      map = new google.maps.Map(document.getElementById('map'), {
-          center: pyrmont,
-          zoom: 1
-        });
-        var request = {
-          // location: pyrmont,
-          // radius: '5000',
-          query: searchUserInput.searchText,
-          //region: "us",                  
-        };
-        
-        service = new google.maps.places.PlacesService(map);
-         service.textSearch(request, function(results, status) {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {    
-            
-            resolve(results); 
-          }else{
-            reject(status);
-          }
-        });
 
-        
+      // var pyrmont = new google.maps.LatLng(-33.8665433,151.1956316);
+      //var pyrmont = new google.maps.LatLng(85,180);
+      var pyrmont = new google.maps.LatLng(28.5873506, -81.3630192);
+
+     // const element : Element = document.querySelector('#map');
+      const element = document.querySelector('#map') as HTMLDivElement;
+
+      map = new google.maps.Map(element, {
+        //center: pyrmont,
+        zoom: 1
+      });
+      var request = {
+        location: pyrmont,
+        // radius: '5000',
+        query: searchUserInput.searchText + ' coffee',
+        //region: "us",                  
+      };
+     debugger;
+      service = new google.maps.places.PlacesService(map);
+      service.textSearch(request, function (results, status) {       
+        if (status === google.maps.places.PlacesServiceStatus.OK) {               
+          resolve(results);
+        } else {         
+          reject(status);
+        }
+      });
+    });
+  }
+
+  public async NearBySearch(searchUserInput: searchUserInput) {
+    return new Promise<GetSearchOutputResults[]>(async (resolve, reject) => {
+      // var results;
+      var map;
+      var service;
+      var pos;
+      //var pyrmont = new google.maps.LatLng(85,180);
+      //var pyrmont = new google.maps.LatLng(28.5873506, -81.3630192);
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+           pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+         
+          var pyrmont = new google.maps.LatLng(pos.lat, pos.lng);
+
+          var element = document.querySelector('#map') as HTMLDivElement;
+
+          map = new google.maps.Map(element , {
+            //center: pyrmont,
+            zoom: 1
+          });
+          
+          // map = new google.maps.Map(document.getElementById('map'), {
+          //   //center: pyrmont,
+          //   zoom: 1
+          // });
+
+          var request = {
+            location: pyrmont,
+             radius: '500000',
+            //query: searchUserInput.searchText,
+            //region: "us",      
+            //type: ['coffee']            
+            keyword: 'coffee' 
+          };
+    
+          service = new google.maps.places.PlacesService(map);
+          service.nearbySearch(request, function (results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+              
+              resolve(results);
+            } else {
+              reject(status);
+            }
+          });
+
+
+        }, function () {
+          //alert('rr')
+          //this.handleLocationError(true);
+        });
+      }
+      else
+      {
+        //alert('hhh')
+
+      } 
+
+      
     });
 
   }
 
-  public async SearchDetail(searchUserInput: searchUserInput) {
-    return new Promise<GetSearchOutputResults>((resolve, reject) => {
-     // var results;
+
+  public async NearBySearchByZipCodeText(searchUserInput: searchUserInput) {
+    return new Promise<GetSearchOutputResults[]>(async (resolve, reject) => {
+      // var results;
       var map;
       var service;
-      
-     // var pyrmont = new google.maps.LatLng(-33.8665433,151.1956316);
-        var pyrmont = new google.maps.LatLng(85,180);
+
+          var pyrmont = new google.maps.LatLng(searchUserInput.lat, searchUserInput.lng);
+          var element = document.querySelector('#map') as HTMLDivElement;
+
+          map = new google.maps.Map(element, {
+            //center: pyrmont,
+            zoom: 1
+          });
+          var request = {
+            location: pyrmont,
+             radius: '50000',
+            //query: searchUserInput.searchText,
+            //region: "us",      
+             //type: 'coffee'
+             keyword: 'coffee'          
+          };
+          service = new google.maps.places.PlacesService(map);
+          service.nearbySearch(request, function (results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {             
+              resolve(results);
+            } else {
+              reject(status);
+            }
+          });
+
+        });            
+    }
   
-      map = new google.maps.Map(document.getElementById('map'), {
-          center: pyrmont,
-          zoom: 1
-        });
 
-        var request = {
-          placeId: searchUserInput.placeId,
-          //fields: ['name', 'rating', 'formatted_phone_number', 'geometry']
-        };
-        
-        service = new google.maps.places.PlacesService(map);
-        service.getDetails(request, callback);
-        
-        function callback(place, status) {
-          if (status == google.maps.places.PlacesServiceStatus.OK) {
-            resolve(place); 
-          }else{
-            reject(status);
-          }
+
+  public async SearchDetail(searchUserInput: searchUserInput) {
+    return new Promise<GetSearchOutputResults>((resolve, reject) => {
+      // var results;
+      var map;
+      var service;
+
+      // var pyrmont = new google.maps.LatLng(-33.8665433,151.1956316);
+      var pyrmont = new google.maps.LatLng(85, 180);
+      var element = document.querySelector('#map') as HTMLDivElement;
+
+      map = new google.maps.Map(element, {
+        center: pyrmont,
+        zoom: 1
+      });
+
+      var request = {
+        placeId: searchUserInput.placeId,
+        //fields: ['name', 'rating', 'formatted_phone_number', 'geometry']
+      };
+
+      service = new google.maps.places.PlacesService(map);
+      service.getDetails(request, callback);
+
+      function callback(place, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+          resolve(place);
+        } else {
+          reject(status);
         }
+      }
 
-        
+
     });
 
   }
@@ -130,32 +233,32 @@ class UserService {
   }
 
   public async GetMyFriendsUserList(GetUserRelationshipInput: GetUserRelationshipInput): Promise<CreateOrUpdateUserInput[]> {
-    let result = await http.get('api/services/app/UserRelationship/GetMyFriendsUserList', { params: GetUserRelationshipInput });    
+    let result = await http.get('api/services/app/UserRelationship/GetMyFriendsUserList', { params: GetUserRelationshipInput });
     return result.data.result;
   }
 
-  
+
   public async GetDrinkOption() {
     // return new Promise((resolve, reject) => {
     let result = await http.get('api/services/app/DrinkOptions/GetDrinkOptionsAsync');
-     return result.data.result.items;
-   //return resolve(result);
+    return result.data.result.items;
+    //return resolve(result);
 
-  // });
+    // });
   }
   public async GetBeanOption() {
     // return new Promise((resolve, reject) => {
     let result = await http.get('api/services/app/BeanOptions/GetBeanOptionsAsync');
-     return result.data.result.items;
-   //return resolve(result);
+    return result.data.result.items;
+    //return resolve(result);
 
-  // });
+    // });
   }
 
   public async AddRating(CreateRating: CreateRating) {
 
     let result = await http.post('api/services/app/Ratings/CreateRating', CreateRating);
-    return result.data.status;
+    return result.data;
   }
 
 
@@ -176,7 +279,7 @@ class UserService {
 
   public async IsMoveToChangeRatingScreen(RatingSearchInput: RatingSearchInput) {
     let result = await http.post('api/services/app/RatingsDetail/IsMoveToChangeRatingScreen', RatingSearchInput);
-    return result.data.status;
+    return result.data;
   }
 
   public async GetPreviousRatingDetail(RatingSearchInput: RatingSearchInput) {
@@ -185,7 +288,12 @@ class UserService {
   }
 
   public async UpdateRatingDetail(RatingSearchInput: RatingSearchInput) {
-    let result = await http.post('api/services/app/RatingsDetail/UpdateRatingDetail', RatingSearchInput);
+    let result = await http.put('api/services/app/RatingsDetail/UpdateRatingDetail', RatingSearchInput);
+    return result.data;
+  }
+
+  public async UpdateRating(RatingSearchInput: RatingSearchInput) {
+    let result = await http.put('api/services/app/Ratings/UpdateRating', RatingSearchInput);
     return result.data;
   }
 
@@ -197,7 +305,7 @@ class UserService {
   public async UploadPhoto(ImageData: ImageFile) {
 
     let result = await http.post('api/services/app/Ratings/UploadPhoto', ImageData);
-    return result.data.result;
+    return result.data;
   }
   // public async IsFriendbyUserIdAndFollowIdss(GetUserRelationshipInput: GetUserRelationshipInput) {
 
@@ -227,6 +335,6 @@ class UserService {
     return result.data.status;
   }
 
- 
+
 }
 export default new UserService();

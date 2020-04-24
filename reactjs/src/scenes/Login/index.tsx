@@ -9,24 +9,50 @@ import { Redirect } from 'react-router-dom';
 import { L } from 'src/lib/abpUtility';
 import SessionStore from 'src/stores/sessionStore';
 import AccountStore from 'src/stores/accountStore';
+
+
 //import TenantAvailabilityState from 'src/services/account/dto/tenantAvailabilityState';
 //import './index.less';
 import rules from './index.validation';
+import UserStore from 'src/stores/userStore';
 
 //const FormItem = Form.Item;
+
+export interface ILoginState {
+  userId: number;
+  spanuserNameOrEmailAddress: string;
+  spanpassword: string;
+
+  inValidUserNameOrEmailAddress: string;
+
+
+}
 
 export interface ILoginProps extends FormComponentProps {
   authenticationStore?: AuthenticationStore;
   sessionStore?: SessionStore;
   accountStore?: AccountStore;
+  userStore: UserStore;
+
   history: any;
   location: any;
 }
 
-@inject(Stores.AuthenticationStore, Stores.SessionStore, Stores.AccountStore)
+@inject(Stores.AuthenticationStore, Stores.SessionStore, Stores.AccountStore, Stores.UserStore)
 @observer
 class Login extends React.Component<ILoginProps> {
 
+
+
+  Initialstate = {
+    userId: 0,
+    spanuserNameOrEmailAddress: '',
+    spanpassword: '',
+    inValidUserNameOrEmailAddress: ''
+
+  };
+
+  state = this.Initialstate;
   // changeTenant = async () => {
   //   let tenancyName = this.props.form.getFieldValue('tenancyName');
   //   const { loginModel } = this.props.authenticationStore!;
@@ -57,25 +83,112 @@ class Login extends React.Component<ILoginProps> {
 
   handleSubmit = async (e: any) => {
     e.preventDefault();
+    debugger;
+    
     const { loginModel } = this.props.authenticationStore!;
-    await this.props.form.validateFields(async (err: any, values: any) => {
+
+    this.props.form.validateFields(async (err: any, values: any) => {
       if (!err) {
-        await this.props.authenticationStore!.login(values);
-        sessionStorage.setItem('rememberMe', loginModel.rememberMe ? '1' : '0');
-        const { state } = this.props.location;
-        window.location = state ? state.from.pathname : '/';
+
+
+        var result = await this.props.authenticationStore!.login(values);
+        if (result.ErrorMessage != 'Invalid username or password!') {
+          debugger;
+          sessionStorage.setItem('rememberMe', loginModel.rememberMe ? '1' : '0');
+          const { state } = this.props.location;
+          window.location = state ? state.from.pathname : '/';
+          this.setState({ inValidUserNameOrEmailAddress: '' })
+        }  else {
+          this.setState({ inValidUserNameOrEmailAddress: result.ErrorMessage })
+        }
+
+      } else {
+      
+        if (err.userNameOrEmailAddress != undefined) {
+          //this.setState({ spanuserNameOrEmailAddress: err.userNameOrEmailAddress.errors[0].message })
+          this.setState({ spanuserNameOrEmailAddress: 'Email is required' })
+        } else {
+          this.setState({ spanuserNameOrEmailAddress: '' })
+        }
+        if (err.password != undefined) {
+          this.setState({ spanpassword: err.password.errors[0].message })
+        } else {
+          this.setState({ spanpassword: '' })
+        }
       }
     });
   };
+
+ 
 
   public render() {
     let { from } = this.props.location.state || { from: { pathname: '/' } };
     if (this.props.authenticationStore!.isAuthenticated) return <Redirect to={from} />;
 
-    const { loginModel } = this.props.authenticationStore!;
-    const { getFieldDecorator} = this.props.form;
-    return (
-      // <Col className="name">
+    //const { loginModel } = this.props.authenticationStore!;
+    const { getFieldDecorator } = this.props.form;
+    //this.props.userStore.ChangeLoader(false);
+    
+    return (     
+      <div>
+
+        <main id="main">
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-lg-6 offset-lg-3 col-md-12 ">
+                <form className="web-form m-t60" onSubmit={this.handleSubmit}>
+                  <div className="row">
+
+                    <div className="col-md-12 text-center">
+
+                      <div style={{ textAlign: 'initial', color: "#ff0000" }}>
+                        <span id="password" style={{ color: "#ff0000" }}>{this.state.inValidUserNameOrEmailAddress} </span>
+                      </div>
+                      <br></br>
+
+                      <div className="input-group form_lablel">
+                        <label>Email</label>
+                        {getFieldDecorator('userNameOrEmailAddress', { rules: rules.userNameOrEmailAddress })(
+                          <input type="text" placeholder="" className="form-control" />
+                        )}
+                        <span id="userNameOrEmailAddress" style={{ color: "#ff0000" }}>{this.state.spanuserNameOrEmailAddress} </span>
+                      </div>
+                      <div className="input-group form_lablel">
+                        <label>Password</label>
+                        {getFieldDecorator('password', { rules: rules.password })(
+                          <input type="password" placeholder="" className="form-control" />
+                        )}
+                        <span id="password" style={{ color: "#ff0000" }}>{this.state.spanpassword} </span>
+                      </div>
+                      {/* <div className="form-group text-right form_lablel">
+                      <p> <a href="javascript:void(0)">Forgot password</a></p>
+                    </div> */}
+                      {/* <div className="form-group check_box">
+                      <input type="checkbox" checked={loginModel.rememberMe} onChange={loginModel.toggleRememberMe} id="html" />
+                      <label htmlFor="html">Remember me</label>
+                    </div> */}
+                      <button type="submit" className="btn-web m-t10 m-b70">{L('Log in')}</button>
+
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </main>
+
+      </div>
+
+    );
+  }
+}
+
+export default Form.create()(Login);
+
+
+
+
+// <Col className="name">
       //   <Form className="" onSubmit={this.handleSubmit}>
       //     <Row>
       //       <Row style={{ marginTop: 100 }}>
@@ -164,49 +277,3 @@ class Login extends React.Component<ILoginProps> {
       //     </Row>
       //   </Form>
       // </Col>
-
-<div>
-
-<main id="main">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-lg-6 offset-lg-3 col-md-12 ">
-              <form className="web-form m-t60" onSubmit={this.handleSubmit}>
-                <div className="row">
-                  <div className="col-md-12">
-                    <div className="input-group form_lablel">
-                      <label>Email</label>
-                      {getFieldDecorator('userNameOrEmailAddress', { rules: rules.userNameOrEmailAddress })(
-                      <input type="text" placeholder="" className="form-control" />
-                      )}
-                    </div>
-                    <div className="input-group form_lablel">
-                      <label>Password</label>
-                      {getFieldDecorator('password', { rules: rules.password })(
-                      <input type="password" placeholder="" className="form-control" />
-                      )}
-                    </div>
-                    <div className="form-group text-right form_lablel">
-                      <p> <a href="javascript:void(0)">Forgot password</a></p>
-                    </div>
-                    <div className="form-group check_box">
-                      <input type="checkbox" checked={loginModel.rememberMe} onChange={loginModel.toggleRememberMe} id="html" />
-                      <label htmlFor="html">Remember me</label>
-                    </div>
-                    <button type="submit" className="btn-web m-t10 m-b70">{L('LogIn')}</button>
-
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </main>
-
-</div>
-
-    );
-  }
-}
-
-export default Form.create()(Login);

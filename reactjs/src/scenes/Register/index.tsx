@@ -14,9 +14,10 @@ import Stores from 'src/stores/storeIdentifier';
 import UserStore from 'src/stores/userStore';
 import { observer, inject } from 'mobx-react';
 import { FormComponentProps } from 'antd/lib/form';
+import { RouteComponentProps } from 'react-router-dom';
 //import { any } from 'prop-types';
 
-export interface IUserProps  extends FormComponentProps {
+export interface IUserProps  extends FormComponentProps,RouteComponentProps {
   userStore: UserStore;
 }
 
@@ -26,6 +27,11 @@ export interface IUserState {
   skipCount: number;
   userId: number;
   filter: string;
+  affirm : boolean;
+  userName: string;
+  emailAddress:string;
+  password:string;
+  affirmHTML :string;
 }
 
 //  const confirm = Modal.confirm;
@@ -42,25 +48,50 @@ class Register extends AppComponentBase<IUserProps, IUserState> {
     skipCount: 0,
     userId: 0,
     filter: '',
+    affirm : false,
+    userName:'',
+    emailAddress:'',
+    password:'',
+    affirmHTML:''
+
   };
 
   // handleCreate = () => {
     handleCreate = async (e: any) => {
-    //const form = this.props.form;
-
-
-    
+      e.preventDefault();    
     //form.validateFields(async (err: any, values: any) => {
       await this.props.form.validateFields(async (err: any, values: any) => {
 
         if (err) {                  
-          return;
-        } else {
+          if(err.userName != undefined){            
+            this.setState({ userName: err.userName.errors[0].message })        
+          }else{
+            this.setState({ userName: '' })
+          }
 
-          alert(this.state.userId);
+          if(err.emailAddress != undefined){
+            this.setState({ emailAddress: err.emailAddress.errors[0].message })            
+          }else{
+            this.setState({ emailAddress: '' })
+          }
+          if(err.password != undefined){
+            this.setState({ password: err.password.errors[0].message })            
+          }else{
+            this.setState({ password: '' })
+          }
+
+          if(!this.state.affirm){
+            this.setState({ affirmHTML: 'Please check: I affirm that I am at least 18 years old' })            
+          }else{
+            this.setState({ affirmHTML: '' })
+          }
+
+        } else {
           if (this.state.userId == 0) {
            
           await this.props.userStore.create(values);
+          this.props.history.push("/login");
+
           }
           //  else {
           //   await this.props.userStore.update({ id: this.state.userId, ...values });
@@ -74,8 +105,14 @@ class Register extends AppComponentBase<IUserProps, IUserState> {
   };
   
 
-  Temporary(){
+  async componentDidMount() {
+    //document.title = "Amazing Page";
+  }
 
+  Temporary = async (e: any) => {
+    this.setState({
+      affirm: !this.state.affirm // flip boolean value
+    })
   }
   async getAll() {
     await this.props.userStore.getAll({ maxResultCount: this.state.maxResultCount, skipCount: this.state.skipCount, keyword: this.state.filter });
@@ -85,7 +122,7 @@ class Register extends AppComponentBase<IUserProps, IUserState> {
   render() {
 
     const { getFieldDecorator } = this.props.form;
-    
+    this.props.userStore.ChangeLoader(false);
     return (
 
         <main id="main">
@@ -95,12 +132,13 @@ class Register extends AppComponentBase<IUserProps, IUserState> {
             <div className="col-lg-6 col-md-12">
               <form className="web-form m-t60" onSubmit={this.handleCreate}>
                 <div className="row">
-                  <div className="col-md-12 col-12">
+                  <div className="col-md-12 col-12 text-center">
                     <div className="input-group form_lablel">
-                      <label>User Name</label>                      
+                      <label>Username</label>                      
                       {getFieldDecorator('userName', { rules: rules.userName })(
                       <input type="text" placeholder="" className="form-control" />
                       )}
+                       <span id="userName" style={{ color: "#ff0000" }}>{this.state.userName} </span>
                     </div>
                     <div className="input-group form_lablel">
                       <label>Email</label>
@@ -108,20 +146,26 @@ class Register extends AppComponentBase<IUserProps, IUserState> {
                       {getFieldDecorator('emailAddress', { rules: rules.emailAddress })(
                       <input type="text" placeholder="" className="form-control" />
                       )}
+                       <span id="emailAddress" style={{ color: "#ff0000" }}>{this.state.emailAddress} </span>
                     </div>
                     <div className="input-group form_lablel">
                       <label>Password</label>
                       {/* <input type="password" placeholder="" className="form-control" /> */}
                       {getFieldDecorator('password', { rules: rules.password })(
-                      <input type="text" placeholder="" className="form-control" />
+                      <input type="password" placeholder="" className="form-control" />
                       )}
+                       <span id="password" style={{ color: "#ff0000" }}>{this.state.password} </span>
                     </div>
 
-                    {/* <div className="form-group check_box">
-                      <input type="checkbox" id="dddd" checked={true} onChange= {this.Temporary} />                                            
-                      <label htmlFor="html">I affirm that I am at least 18 years old.</label>
-                    </div> */}
-                  
+                    <div className="form-group check_box" style={{ textAlign: 'initial' }}>
+                      <input type="checkbox" id="affirm" checked={this.state.affirm} onChange= {this.Temporary} />                                            
+                      <label htmlFor="affirm">I am at least 18 years old.</label>
+                      <br>
+                    </br>
+                    <span id="password" style={{ color: "#ff0000" }}>{this.state.affirmHTML} </span>
+                    </div>
+                    
+                    
                     <input type="Submit" className="btn-web m-t10 m-b70" value="Submit" />
                   </div>
                 </div>

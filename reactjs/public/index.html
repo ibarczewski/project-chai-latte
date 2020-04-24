@@ -13,20 +13,22 @@
    
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-  <script type="text/javascript" src="/dist/abp.js"></script>
-  <script type="text/javascript" src="/dist/signalr.min.js"></script>
+  <script type="text/javascript" async src="/dist/abp.js"></script>
+  <!-- <script type="text/javascript" src="/dist/signalr.min.js"></script> -->
 
   <script defer type="text/javascript"
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwjbZH91bjIqgbDFvsYHZ1vpKJME89kZQ&libraries=places">
  </script>
- 
-<script  type="text/javascript"
-src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js">
-</script>
 
-<script type="text/javascript"
+<script  type="text/javascript" async
+        src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js">
+</script> 
+
+
+<script type="text/javascript" async
        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
 </script>
+
 
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -44,6 +46,9 @@ src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js">
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
+  <div id="loading" style="display:none;">
+  </div>
+
   <div id="root"></div>
 
   <div id="map"></div>

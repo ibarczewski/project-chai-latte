@@ -9,7 +9,7 @@ export interface CreateOrUpdateUserInput {
   id: number;
   userImage: string;
   userImageType: string;
-  UserImageName: string;
+  userImageName: string;
   referrelCode: string;
   drinkPreferenceId: number;
   drinkLogPreferenceId: number;

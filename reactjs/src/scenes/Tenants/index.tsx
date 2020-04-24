@@ -1,7 +1,7 @@
 import { Card, Col, Row, Table, Tag, Dropdown, Menu, Modal, Input } from 'antd';
 import * as React from 'react';
 import { EntityDto } from 'src/services/dto/entityDto';
-import CreateOrUpdateTenant from './components/createOrUpdateTenant';
+//import CreateOrUpdateTenant from './components/createOrUpdateTenant';
 import { inject, observer } from 'mobx-react';
 import Stores from 'src/stores/storeIdentifier';
 import TenantStore from 'src/stores/tenantStore';
@@ -201,7 +201,7 @@ class Tenant extends AppComponentBase<ITenantProps, ITenantState> {
             />
           </Col>
         </Row>
-        <CreateOrUpdateTenant
+        {/* <CreateOrUpdateTenant
           wrappedComponentRef={this.saveFormRef}
           visible={this.state.modalVisible}
           onCancel={() =>
@@ -211,7 +211,7 @@ class Tenant extends AppComponentBase<ITenantProps, ITenantState> {
           }
           modalType={this.state.tenantId == 0 ? 'edit' : 'create'}
           onCreate={this.handleCreate}
-        />
+        /> */}
       </Card>
     );
   }

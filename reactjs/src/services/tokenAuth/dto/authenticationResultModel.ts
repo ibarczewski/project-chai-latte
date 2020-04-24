@@ -3,4 +3,5 @@ export interface AuthenticationResultModel {
   encryptedAccessToken: string;
   expireInSeconds: number;
   userId: number;
+  ErrorMessage: string;
 }

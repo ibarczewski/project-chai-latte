@@ -36,13 +36,43 @@ class UserStore {
   @observable BeanOptionsResult: getBeanOptions[];
 
   @observable ratings: CreateRating[] | undefined;
+  @observable IsLoader: boolean;
+
+
+  // @observable AveragePlaceRating: Number;
+  // @observable AveragePlaceMyRating: Number;
+
+  @action
+  async ChangeLoader(Isloader : boolean ) {    
+    this.IsLoader = Isloader;
+  }
 
   @action
   async search(searchUserInput: searchUserInput) {    
     let result = await userService.search(searchUserInput);
-    this.SearchResult = result;    
-    console.log(JSON.stringify(this.SearchResult));
+    debugger;
+    if(result != undefined && result != null){
+
+      var length = result.length;
+      if(length > 10){
+        result = result.slice(0, 10);
+      }
+    }    
+   return this.SearchResult = result;  
+
   }
+
+  @action
+  async NearBySearch(searchUserInput: searchUserInput) {    
+    let result = await userService.NearBySearch(searchUserInput);
+    return this.SearchResult = result;    
+  }
+  @action
+  async NearBySearchByZipCodeText(searchUserInput: searchUserInput) {    
+    let result = await userService.NearBySearchByZipCodeText(searchUserInput);
+    return this.SearchResult = result;    
+  }
+  
   @action
   async SearchDetail(searchUserInput: searchUserInput){    
     let result = await userService.SearchDetail(searchUserInput);
@@ -77,7 +107,6 @@ class UserStore {
     //   if (x.id == updateUserInput.id) x = result;
     //   return x;
     // });
-    debugger;
     this.users.items = this.users.items.map((x: CreateOrUpdateUserInput) => {
       if (x.id == updateUserInput.id) x = result;
       return x;
@@ -117,7 +146,7 @@ class UserStore {
       id: 0,
       userImage: '',
       userImageType: '',
-      UserImageName: '',
+      userImageName: '',
       referrelCode: '',
       drinkPreferenceId: 0,
       drinkLogPreferenceId: 0,
@@ -157,13 +186,15 @@ async GetBeanOption() {
  this.BeanOptionsResult = result;
 }
 @action
-async AddRating(CreateRating: CreateRating,DrinkOptionId:any,BeanTypeId:any,MilkTypeId:any,RoasterTypeId:any,Placeid : any) {
+async AddRating(CreateRating: CreateRating,DrinkOptionId:any,BeanTypeId:any,MilkTypeId:any,RoasterTypeId:any,Placeid : any,RatingPoints : any,placename:any) {
     CreateRating.drinkOptionId = DrinkOptionId;
     CreateRating.beanTypeId = BeanTypeId;
     CreateRating.milkTypeId = MilkTypeId;
     CreateRating.roasterTypeId = RoasterTypeId;
-    CreateRating.placeId = Placeid;
-    
+    CreateRating.placeId = Placeid;    
+    CreateRating.placeRating = RatingPoints;
+    CreateRating.placeName = placename;
+
     this.ratings = undefined;
     let result = await userService.AddRating(CreateRating);
     return result;
@@ -177,15 +208,17 @@ async GetAllRatings(pagedFilterAndSortedRequest: PagedUserResultRequestDto) {
 }
 
   @action
-async AddMoreRating(CreateRating: CreateRating,DrinkOptionId:any,BeanTypeId:any,MilkTypeId:any,RoasterTypeId:any,Placeid : any) {
+async AddMoreRating(CreateRating: CreateRating,DrinkOptionId:any,BeanTypeId:any,MilkTypeId:any,RoasterTypeId:any,Placeid : any, RatingId : any,RatingPoints : any,placename:any) {
     CreateRating.drinkOptionId = DrinkOptionId;
     CreateRating.beanTypeId = BeanTypeId;
     CreateRating.milkTypeId = MilkTypeId;
     CreateRating.roasterTypeId = RoasterTypeId;
     CreateRating.placeId = Placeid;
-
+    CreateRating.ratingId = RatingId;
+    CreateRating.placeRating = RatingPoints;
+    CreateRating.placeName = placename;
+    
     let result = await userService.AddMoreRating(CreateRating);
-    alert('AddMoreRating =' + JSON.stringify(result));
     return result;
   }
 
@@ -194,7 +227,6 @@ async AddMoreRating(CreateRating: CreateRating,DrinkOptionId:any,BeanTypeId:any,
     RatingSearchInput.placeId = Placeid;
     RatingSearchInput.UserId = UserId;
       let result = await userService.IsRatingExistByPlace(RatingSearchInput);
-      alert('IsRatingExistByPlace =' + JSON.stringify(result));
       return result;
     }
 
@@ -221,6 +253,11 @@ async AddMoreRating(CreateRating: CreateRating,DrinkOptionId:any,BeanTypeId:any,
         let result = await userService.UpdateRatingDetail(RatingSearchInput);
         return result;
       }
+      @action
+      async UpdateRating(RatingSearchInput: RatingSearchInput) {
+          let result = await userService.UpdateRating(RatingSearchInput);
+          return result;
+        }
 
   @action
   async UploadPhoto(ImageData : ImageFile) {    
@@ -240,7 +277,6 @@ async AddMoreRating(CreateRating: CreateRating,DrinkOptionId:any,BeanTypeId:any,
         this.UserRelationshipList = result;       
       }
       
-
       @action
       async SendFollowRequest(GetUserRelationshipInput: GetUserRelationshipInput) {            
           let result = await userService.SendFollowRequest(GetUserRelationshipInput);

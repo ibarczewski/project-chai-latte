@@ -1,7 +1,7 @@
 import { Card, Col, Row, Table, Dropdown, Menu, Modal, Input } from 'antd';
 import * as React from 'react';
 import { EntityDto } from 'src/services/dto/entityDto';
-import CreateOrUpdateRole from './components/createOrUpdateRole';
+//import CreateOrUpdateRole from './components/createOrUpdateRole';
 import { observer, inject } from 'mobx-react';
 import AppComponentBase from 'src/components/AppComponentBase';
 import Stores from 'src/stores/storeIdentifier';
@@ -112,7 +112,7 @@ class Role extends AppComponentBase<IRoleProps, IRoleState> {
   };
 
   public render() {
-    const { allPermissions, roles } = this.props.roleStore;
+    const {  roles } = this.props.roleStore;
     const columns = [
       { title: L('RoleName'), dataIndex: 'name', key: 'name', width: 150, render: (text: string) => <div>{text}</div> },
       { title: L('DisplayName'), dataIndex: 'displayName', key: 'displayName', width: 150, render: (text: string) => <div>{text}</div> },
@@ -194,7 +194,7 @@ class Role extends AppComponentBase<IRoleProps, IRoleState> {
             />
           </Col>
         </Row>
-
+{/* 
         <CreateOrUpdateRole
           wrappedComponentRef={this.saveFormRef}
           visible={this.state.modalVisible}
@@ -207,7 +207,7 @@ class Role extends AppComponentBase<IRoleProps, IRoleState> {
           onOk={this.handleCreate}
           permissions={allPermissions}
           roleStore={this.props.roleStore}
-        />
+        /> */}
       </Card>
     );
   }

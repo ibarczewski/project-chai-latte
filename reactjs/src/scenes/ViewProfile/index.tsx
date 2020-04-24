@@ -23,6 +23,7 @@ import NewsFeeds from 'src/components/NewsFeeds';
 import { GetDrinkLogPrefrences } from 'src/services/user/dto/GetDrinkLogPrefrences';
 import { GetUserRelationshipInput } from 'src/services/user/dto/GetUserRelationshipInput';
 
+// import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 
 //import { Redirect } from 'react-router-dom';
 
@@ -72,7 +73,7 @@ class ViewProfile extends AppComponentBase<IViewProfileProps, IViewProfileState,
     userId: 0,
     IsShow: true,
     SelectedFile: '',
-    loading: false,
+    loading: true,
     ImageName: '',
     DrinkLogPreferenceResult: [
       {
@@ -111,8 +112,13 @@ class ViewProfile extends AppComponentBase<IViewProfileProps, IViewProfileState,
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
   }
 
-  async componentWillMount() {
+  
+
+  async componentDidMount() {
+
+    setTimeout(() => this.setState({ loading: false }), 3500);    
     this.LoadProfile();
+    
   }
 
   SendFollowRequest = async (e: any) => {
@@ -137,6 +143,16 @@ class ViewProfile extends AppComponentBase<IViewProfileProps, IViewProfileState,
   async LoadProfile() {
     this.state.userId = Number(this.getParameterByName('UserId', window.location.href));
     this.setState({ userId: this.state.userId })
+    if (this.props.userStore.MyFriendsUser == undefined) {
+
+      var myObject = {} as GetUserRelationshipInput;
+      myObject.UserId = Number(abp.utils.getCookieValue(AppConsts.User.UserId));
+      myObject.followerId = this.state.userId;
+      await this.props.userStore.getMyFriendsUsers(myObject);
+
+     // await this.props.userStore.getAll({ maxResultCount: this.state.maxResultCount, skipCount: this.state.skipCount, keyword: this.state.filter });
+    }
+
     if (this.props.userStore.users == undefined) {
       await this.props.userStore.getAll({ maxResultCount: this.state.maxResultCount, skipCount: this.state.skipCount, keyword: this.state.filter });
     }
@@ -151,14 +167,16 @@ class ViewProfile extends AppComponentBase<IViewProfileProps, IViewProfileState,
 
       //temporary
       //await this.LoadUser({ id: Number(abp.utils.getCookieValue(AppConsts.User.UserId)) });
-      debugger;
+     
       this.UserProfileTest = this.props.userStore.users.items.filter((x: CreateOrUpdateUserInput) => x.id == Number(abp.utils.getCookieValue(AppConsts.User.UserId)));
       this.UserProfile = this.UserProfileTest[0];
 
-
+debugger;
       this.forceUpdate();
-      $('#ImageIDToDisplay').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
-      $('#ImageIDToDisplayProfile').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
+     // $('#ImageIDToDisplay').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
+
+      $('#ImageIDToDisplay').attr('src', AppConsts.remoteServiceBaseUrl + "ProfileImages/" + this.UserProfile.userImageName);
+      $('#ImageIDToDisplayProfile').attr('src', AppConsts.remoteServiceBaseUrl + "ProfileImages/" + this.UserProfile.userImageName);
 
       if (this.state.DrinkLogPreferenceResult != null || this.state.DrinkLogPreferenceResult != undefined) {
         if (this.UserProfile.drinkLogPreferenceId != null && this.UserProfile.drinkLogPreferenceId > 0) {
@@ -168,7 +186,6 @@ class ViewProfile extends AppComponentBase<IViewProfileProps, IViewProfileState,
           this.setState({ DrinkPreference: '' });
         }
       }
-      debugger;
       if (this.props.userStore.DrinkOptionsResult != null || this.props.userStore.DrinkOptionsResult != undefined) {
         if (this.UserProfile.drinkPreferenceId != null && this.UserProfile.drinkPreferenceId > 0) {
           this.state.DrinkPreference = this.props.userStore.DrinkOptionsResult.find(x => x.id === this.UserProfile.drinkPreferenceId)!.name;
@@ -193,8 +210,11 @@ class ViewProfile extends AppComponentBase<IViewProfileProps, IViewProfileState,
       this.UserProfile = this.UserProfileTest[0];
       this.forceUpdate();
 
-      $('#ImageIDToDisplay').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
-      $('#ImageIDToDisplayProfile').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
+     // $('#ImageIDToDisplay').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
+     debugger;
+     $('#ImageIDToDisplay').attr('src', AppConsts.remoteServiceBaseUrl + "ProfileImages/" + this.UserProfile.userImageName);
+     $('#ImageIDToDisplayProfile').attr('src', AppConsts.remoteServiceBaseUrl + "ProfileImages/" + this.UserProfile.userImageName);
+      //$('#ImageIDToDisplayProfile').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
 
       this.setState({ IsPrivate: this.UserProfile.isPrivate });
       //    if (this.state.DrinkLogPreferenceResult != null ||this.state.DrinkLogPreferenceResult != undefined) 
@@ -227,7 +247,7 @@ class ViewProfile extends AppComponentBase<IViewProfileProps, IViewProfileState,
 
     if (this.props.location.search !== prevProps.location.search) {
       this.setState(this.Initialstate);
-      this.componentWillMount();
+      this.componentDidMount();
     }
   }
 
@@ -250,17 +270,15 @@ class ViewProfile extends AppComponentBase<IViewProfileProps, IViewProfileState,
     // }
 
 
-    if (!this.UserProfile) {
+    if (!this.UserProfile) {      
       return (
         <div>
         </div>)
-    } else
+    } else      
       return (
-
-
         <div>
 
-          <main id="main">
+          <main id="main" >
             <div className="container-fluid">
               <div className="row">
                 <div className="col-lg-7 col-md-12 col-sm-12">
@@ -335,14 +353,14 @@ class ViewProfile extends AppComponentBase<IViewProfileProps, IViewProfileState,
                             <label>My Friends:</label>
                           </div>
                           <ul className="tab-tag">
-                            {this.props.userStore.users.items.map((item, key) =>
+                            { this.props.userStore.MyFriendsUser != undefined? this.props.userStore.MyFriendsUser.map((item, key) =>
                               <li>
                                 {/* <a id={"UseranchorId" + key} href="#" onClick={() => this.props.history.push("/ViewProfile/?UserId="+ item.id,null)} itemID={item.id.toString()}> {item.name}
           </a> */}
                                 <a id={"UseranchorId" + key} onClick={() => this.props.history.push("/ViewProfile/?UserId=" + item.id)} itemID={item.id.toString()}> {item.name}
                                 </a>
                               </li>
-                            )}
+                            ): ''}
                           </ul>
                         </div>
                         : ''}
@@ -350,9 +368,10 @@ class ViewProfile extends AppComponentBase<IViewProfileProps, IViewProfileState,
                     </form>
                   </div>
                 </div>
-
-                <NewsFeeds {...this.props} />
-
+                <div className="col-lg-5 hidden-md">
+                  <NewsFeeds {...this.props} />
+                </div>
+                
                 {/* <div className="col-lg-5 hidden-md">
                   <div className="sidebar-tabs">
                     <div className="sidebar_heading"><h3>Feed</h3></div>

@@ -10,12 +10,16 @@ import { HashRouter } from 'react-router-dom';
 
 import initializeStores from './stores/storeInitializer';
 //import * as moment from 'moment';
-import abpUserConfigurationService from 'src/services/abpUserConfigurationService';
-import Utils from 'src/utils/utils';
+//import abpUserConfigurationService from 'src/services/abpUserConfigurationService';
+//import Utils from 'src/utils/utils';
+
 
 import "src/Content/css/main.css";
 import "src/Content/js/main.js";
 
+
+// import "src/Content/js/jquery.js";
+// import "src/Content/js/bootstrap.js";
 
 
 //  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwjbZH91bjIqgbDFvsYHZ1vpKJME89kZQ&libraries=places" async defer>
@@ -27,9 +31,9 @@ import "src/Content/js/main.js";
 
 
 
-Utils.setLocalization();
+//Utils.setLocalization();
 
-abpUserConfigurationService.getAll().then(data => {
+// abpUserConfigurationService.getAll().then(data => {
   // Utils.extend(true, abp, data.data.result);
   // abp.clock.provider = Utils.getCurrentClockProvider(data.data.result.clock.provider);
 
@@ -57,4 +61,4 @@ abpUserConfigurationService.getAll().then(data => {
   );
 
   registerServiceWorker();
-});
+// });
