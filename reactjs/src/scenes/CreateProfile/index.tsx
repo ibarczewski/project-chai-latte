@@ -90,7 +90,7 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
       this.InitialdrinkLogPreferenceValue(this.UserProfile.drinkLogPreferenceId)
      // $('#ImageIDToDisplay').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
       
-      $('#ImageIDToDisplay').attr('src', AppConsts.remoteServiceBaseUrl + "ProfileImages/" + this.UserProfile.userImageName);      
+      $('#ImageIDToDisplay').attr('src', `https://avatars.dicebear.com/api/human/${(Math.random() + 1).toString(36).substring(7)}.svg`);      
 
 
       //$('#ImageIDToDisplayProfile').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
@@ -190,7 +190,7 @@ class CreateProfile extends AppComponentBase<ICreateProfileProps, ICreateProfile
     $("#TextLineMilkShowTags").css("display", "none");
   }
   SelectLogPreferenceTags = (e) => {
-    debugger;
+    // debugger;
 
     var CurrentanchorId = e.target.id
     var Achildrens = $("#" + CurrentanchorId);

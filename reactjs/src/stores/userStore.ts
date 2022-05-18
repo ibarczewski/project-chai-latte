@@ -50,7 +50,7 @@ class UserStore {
   @action
   async search(searchUserInput: searchUserInput) {    
     let result = await userService.search(searchUserInput);
-    debugger;
+    // debugger;
     if(result != undefined && result != null){
 
       var length = result.length;

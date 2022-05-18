@@ -41,7 +41,7 @@ class UserService {
         query: searchUserInput.searchText + ' coffee',
         //region: "us",                  
       };
-     debugger;
+     // debugger;
       service = new google.maps.places.PlacesService(map);
       service.textSearch(request, function (results, status) {       
         if (status === google.maps.places.PlacesServiceStatus.OK) {               
@@ -218,8 +218,53 @@ class UserService {
   }
 
   public async get(entityDto: EntityDto): Promise<CreateOrUpdateUserInput> {
-    let result = await http.get('api/services/app/User/Get', { params: entityDto });
-    return result.data.result;
+    // let result = await http.get('api/services/app/User/Get', { params: entityDto });
+    // return result.data.result;
+
+    if (entityDto.id === 1) {
+      return Promise.resolve({
+        userName: 'CoffeePerson',
+        name: 'Ian',
+        surname: 'Ian B',
+        emailAddress: '',
+        isActive: true,
+        roleNames: [''],
+        password: '',
+        id: 1,
+        userImage: '',
+        userImageType: '',
+        userImageName: '',
+        referrelCode: '',
+        drinkPreferenceId: 1,
+        drinkLogPreferenceId: 1,
+        newPassword: '',
+        ImageData: '',
+        ImageName: '',
+        isPrivate: false,
+      })
+
+    } else {
+      return Promise.resolve({
+        userName: 'YungSpider',
+        name: 'Miles Morales',
+        surname: '',
+        emailAddress: 'youngspider@gmail.com',
+        isActive: true,
+        roleNames: [''],
+        password: '',
+        id: 2,
+        userImage: '',
+        userImageType: '',
+        userImageName: 'profile_img.jpg',
+        referrelCode: '',
+        drinkPreferenceId: 1,
+        drinkLogPreferenceId: 1,
+        newPassword: '',
+        ImageData: '',
+        ImageName: '',
+        isPrivate: false,
+      })
+    }
   }
 
   //   public async getAll(pagedFilterAndSortedRequest: PagedUserResultRequestDto): Promise<PagedResultDto<GetAllUserOutput>> {
@@ -228,24 +273,104 @@ class UserService {
   // }
 
   public async getAll(pagedFilterAndSortedRequest: PagedUserResultRequestDto): Promise<PagedResultDto<CreateOrUpdateUserInput>> {
-    let result = await http.get('api/services/app/User/GetAll', { params: pagedFilterAndSortedRequest });
-    return result.data.result;
+    return Promise.resolve({ totalCount: 1, items: [ {
+      userName: 'CoffeePerson',
+      name: 'Ian Barczewski',
+      surname: '',
+      emailAddress: 'ibarczewski@gmail.com',
+      isActive: true,
+      roleNames: [''],
+      password: '',
+      id: 1,
+      userImage: '',
+      userImageType: '',
+      userImageName: '',
+      referrelCode: '',
+      drinkPreferenceId: 1,
+      drinkLogPreferenceId: 1,
+      newPassword: '',
+      ImageData: '',
+      ImageName: '',
+      isPrivate: false,
+    }, {
+      userName: 'YungSpider',
+      name: 'Miles Morales',
+      surname: '',
+      emailAddress: 'youngspider@gmail.com',
+      isActive: true,
+      roleNames: [''],
+      password: '',
+      id: 2,
+      userImage: '',
+      userImageType: '',
+      userImageName: 'profile_img.jpg',
+      referrelCode: '',
+      drinkPreferenceId: 1,
+      drinkLogPreferenceId: 1,
+      newPassword: '',
+      ImageData: '',
+      ImageName: '',
+      isPrivate: false,
+    }]})
   }
 
   public async GetMyFriendsUserList(GetUserRelationshipInput: GetUserRelationshipInput): Promise<CreateOrUpdateUserInput[]> {
-    let result = await http.get('api/services/app/UserRelationship/GetMyFriendsUserList', { params: GetUserRelationshipInput });
-    return result.data.result;
+    // let result = await http.get('api/services/app/UserRelationship/GetMyFriendsUserList', { params: GetUserRelationshipInput });
+    // return result.data.result;
+    console.log(GetUserRelationshipInput);
+    if (GetUserRelationshipInput.UserId === 1) {
+      return Promise.resolve([ {
+        userName: 'YungSpider',
+        name: 'Miles Morales',
+        surname: '',
+        emailAddress: 'youngspider@gmail.com',
+        isActive: true,
+        roleNames: [''],
+        password: '',
+        id: 2,
+        userImage: '',
+        userImageType: '',
+        userImageName: '',
+        referrelCode: '',
+        drinkPreferenceId: 1,
+        drinkLogPreferenceId: 1,
+        newPassword: '',
+        ImageData: '',
+        ImageName: '',
+        isPrivate: false,
+      }]);
+    } else {
+      return Promise.resolve([ {
+        userName: 'CoffeePerson',
+        name: 'Ian Barczewski',
+        surname: 'Bing Bong',
+        emailAddress: 'ibarczewski@gmail.com',
+        isActive: true,
+        roleNames: [''],
+        password: '',
+        id: 1,
+        userImage: '',
+        userImageType: '',
+        userImageName: '',
+        referrelCode: '',
+        drinkPreferenceId: 1,
+        drinkLogPreferenceId: 1,
+        newPassword: '',
+        ImageData: '',
+        ImageName: '',
+        isPrivate: false,
+      }]);
+      
+    }
   }
 
 
   public async GetDrinkOption() {
-    // return new Promise((resolve, reject) => {
-    let result = await http.get('api/services/app/DrinkOptions/GetDrinkOptionsAsync');
-    return result.data.result.items;
-    //return resolve(result);
+    return Promise.resolve([{id: 1, name: 'Folger\'s', type: 'Example Drink', description: 'Drink is good folks'}]);
 
     // });
   }
+  
   public async GetBeanOption() {
     // return new Promise((resolve, reject) => {
     let result = await http.get('api/services/app/BeanOptions/GetBeanOptionsAsync');
@@ -263,8 +388,10 @@ class UserService {
 
 
   public async GetAllRating(pagedFilterAndSortedRequest: PagedUserResultRequestDto): Promise<CreateRating[]> {
-    let result = await http.get('api/services/app/Ratings/GetRatingsAsync', { params: pagedFilterAndSortedRequest });
-    return result.data.result.items;
+    // let result = await http.get('api/services/app/Ratings/GetRatingsAsync', { params: pagedFilterAndSortedRequest });
+    // return result.data.result.items;
+
+    return Promise.resolve([]);
   }
 
   public async AddMoreRating(CreateRating: CreateRating) {
@@ -315,8 +442,10 @@ class UserService {
 
 
   public async IsFriendbyUserIdAndFollowId(GetUserRelationshipInput: GetUserRelationshipInput): Promise<boolean> {
-    let result = await http.get('api/services/app/UserRelationship/GetUserRelationship', { params: GetUserRelationshipInput });
-    return result.data.result;
+    // let result = await http.get('api/services/app/UserRelationship/GetUserRelationship', { params: GetUserRelationshipInput });
+    // return result.data.result;
+
+    return Promise.resolve(true);
   }
 
   public async GetUserRelationshipListbyUserId(GetUserRelationshipInput: GetUserRelationshipInput): Promise<GetUserRelationshipInput[]> {

@@ -64,7 +64,7 @@ class Desktop_Login extends AppComponentBase<IDesktop_LoginProps, IDesktop_Login
 
                     this.props.history.push("/searchresult?searchkey=" + values.searchText);
                     // if (Number(values.searchText)) {
-                    //     // debugger;
+                    //     // // debugger;
                     //     // await this.props.userStore.search(values);
                     //     // var lat = 0;
                     //     // var lng = 0;;            

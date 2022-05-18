@@ -83,7 +83,7 @@ class Login extends React.Component<ILoginProps> {
 
   handleSubmit = async (e: any) => {
     e.preventDefault();
-    debugger;
+    // debugger;
     
     const { loginModel } = this.props.authenticationStore!;
 
@@ -93,7 +93,7 @@ class Login extends React.Component<ILoginProps> {
 
         var result = await this.props.authenticationStore!.login(values);
         if (result.ErrorMessage != 'Invalid username or password!') {
-          debugger;
+          // debugger;
           sessionStorage.setItem('rememberMe', loginModel.rememberMe ? '1' : '0');
           const { state } = this.props.location;
           window.location = state ? state.from.pathname : '/';

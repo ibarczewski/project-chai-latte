@@ -21,13 +21,14 @@ class TenantService {
   }
 
   public async get(entityDto: EntityDto): Promise<GetTenantOutput> {
-    let result = await http.get('api/services/app/Tenant/Get', { params: entityDto });
-    return result.data.result;
+    // let result = await http.get('api/services/app/Tenant/Get', { params: entityDto });
+    // return result.data.result;
+    return Promise.resolve({tenancyName: 'tenancy name?', name: 'tenant name?', isActive: true, id: 1})
   }
 
   public async getAll(pagedFilterAndSortedRequest: PagedTenantResultRequestDto): Promise<PagedResultDto<GetAllTenantOutput>> {
-    let result = await http.get('api/services/app/Tenant/GetAll', { params: pagedFilterAndSortedRequest });
-    return result.data.result;
+    // let result = await http.get('api/services/app/Tenant/GetAll', { params: pagedFilterAndSortedRequest });
+    return Promise.resolve({ totalCount: 1, items: [{tenancyName: 'tenancy name?', name: 'tenant name?', isActive: true, id: 1}]});
   }
 
   public async update(updateTenantInput: UpdateTenantInput): Promise<UpdateTenantOutput> {

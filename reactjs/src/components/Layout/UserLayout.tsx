@@ -99,7 +99,8 @@ class UserLayout extends AppComponentBase<IUserLayoutProps, IUserLayoutState> {
       this.forceUpdate();
 
       //$('#ImageIDToDisplayProfile').attr('src', "data:image/" + this.SingleUser.userImageType + ";base64," + this.SingleUser.userImage);
-      $('#ImageIDToDisplayProfile').attr('src', AppConsts.remoteServiceBaseUrl + "ProfileImages/" + this.SingleUser.userImageName);
+      // $('#ImageIDToDisplayProfile').attr('src', AppConsts.remoteServiceBaseUrl + "ProfileImages/" + this.SingleUser.userImageName);
+      $('#ImageIDToDisplayProfile').attr('src', `https://avatars.dicebear.com/api/human/${(Math.random() + 1).toString(36).substring(7)}.svg`);
 
     }
   }

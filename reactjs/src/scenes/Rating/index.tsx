@@ -230,7 +230,7 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
     $("#TextLineDrinkShowTags").css("display", "none");
   }
   SelectDrinkTags = (e) => {
-    debugger;
+    // debugger;
     var CurrentanchorId = e.target.id
     var Achildrens = $("#" + CurrentanchorId);
     var DrinkOptionId = Achildrens[0].attributes[1].value;
@@ -532,7 +532,7 @@ class Rating extends AppComponentBase<IRatingProps, IRatingState, searchUserInpu
 
   handleSubmit = async (e: any) => {
     e.preventDefault();
-    debugger;
+    // debugger;
     await this.props.form.validateFields(async (err: any, values: any) => {
       if (!err) {
         this.placeid = this.getParameterByName('placeid', window.location.href);

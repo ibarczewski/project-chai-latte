@@ -112,7 +112,7 @@ class SearchResult extends AppComponentBase<ISearchResultProps, ISearchResultSta
     var myObject = {} as searchUserInput;
     myObject.searchText = this.searchkey;
 
-    debugger;
+    // debugger;
 
     if (this.searchkey != '' && Number(this.searchkey)) {
 
@@ -166,7 +166,7 @@ class SearchResult extends AppComponentBase<ISearchResultProps, ISearchResultSta
           };
 
           self.props.userStore.SearchResult.map(async (item, key) => {
-            debugger;
+            // debugger;
             item.distance = 0;
             var directionsService = new google.maps.DirectionsService();
             var lat = item.geometry!.location!.lat();
@@ -180,7 +180,7 @@ class SearchResult extends AppComponentBase<ISearchResultProps, ISearchResultSta
               if (status !== google.maps.DirectionsStatus.OK) {
                 return;
               } else {
-                debugger;
+                // debugger;
                 // var split = response.routes[0].legs[0].distance.text.split(' ');
                 // item.distance = split[0];
                 item.distance = response.routes[0].legs[0].distance.value/1000;     
@@ -210,7 +210,7 @@ class SearchResult extends AppComponentBase<ISearchResultProps, ISearchResultSta
           };
 
           self.props.userStore.SearchResult.map((item, key) => {
-            debugger;
+            // debugger;
             item.distance = 0;
             var directionsService = new google.maps.DirectionsService();
             var lat = item.geometry!.location!.lat();
@@ -247,11 +247,11 @@ class SearchResult extends AppComponentBase<ISearchResultProps, ISearchResultSta
 //   var delayFactor = 0;
 //   var distance = "";
 //   const self = this;
-//   debugger;
+//   // debugger;
 
 //   var directionsService = new google.maps.DirectionsService();
 //   directionsService.route(request, function(response, status) {
-//     debugger;
+//     // debugger;
 //         if (status === google.maps.DirectionsStatus.OK) {
 //           console.log(response);
 //            distance = response.routes[0].legs[0].distance.text;

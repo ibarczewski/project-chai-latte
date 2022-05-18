@@ -20,7 +20,7 @@ http.interceptors.request.use(
     if (!!abp.auth.getToken()) {
       config.headers.common['Authorization'] = 'Bearer ' + abp.auth.getToken();
     }
-    debugger;
+    // debugger;
     $("#loading").show();
     config.headers.common['.AspNetCore.Culture'] = abp.utils.getCookieValue('Abp.Localization.CultureName');
     config.headers.common['Abp.TenantId'] = abp.multiTenancy.getTenantIdCookie();

@@ -171,12 +171,12 @@ class ViewProfile extends AppComponentBase<IViewProfileProps, IViewProfileState,
       this.UserProfileTest = this.props.userStore.users.items.filter((x: CreateOrUpdateUserInput) => x.id == Number(abp.utils.getCookieValue(AppConsts.User.UserId)));
       this.UserProfile = this.UserProfileTest[0];
 
-debugger;
+// debugger;
       this.forceUpdate();
      // $('#ImageIDToDisplay').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
 
-      $('#ImageIDToDisplay').attr('src', AppConsts.remoteServiceBaseUrl + "ProfileImages/" + this.UserProfile.userImageName);
-      $('#ImageIDToDisplayProfile').attr('src', AppConsts.remoteServiceBaseUrl + "ProfileImages/" + this.UserProfile.userImageName);
+      $('#ImageIDToDisplay').attr('src', `https://avatars.dicebear.com/api/human/${(Math.random() + 1).toString(36).substring(7)}.svg`);
+      $('#ImageIDToDisplayProfile').attr('src', `https://avatars.dicebear.com/api/human/${(Math.random() + 1).toString(36).substring(7)}.svg`);
 
       if (this.state.DrinkLogPreferenceResult != null || this.state.DrinkLogPreferenceResult != undefined) {
         if (this.UserProfile.drinkLogPreferenceId != null && this.UserProfile.drinkLogPreferenceId > 0) {
@@ -211,9 +211,9 @@ debugger;
       this.forceUpdate();
 
      // $('#ImageIDToDisplay').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
-     debugger;
-     $('#ImageIDToDisplay').attr('src', AppConsts.remoteServiceBaseUrl + "ProfileImages/" + this.UserProfile.userImageName);
-     $('#ImageIDToDisplayProfile').attr('src', AppConsts.remoteServiceBaseUrl + "ProfileImages/" + this.UserProfile.userImageName);
+     // debugger;
+     $('#ImageIDToDisplay').attr('src', `https://avatars.dicebear.com/api/human/${(Math.random() + 1).toString(36).substring(7)}.svg`);
+     $('#ImageIDToDisplayProfile').attr('src', `https://avatars.dicebear.com/api/human/${(Math.random() + 1).toString(36).substring(7)}.svg`);
       //$('#ImageIDToDisplayProfile').attr('src', "data:image/" + this.UserProfile.userImageType + ";base64," + this.UserProfile.userImage);
 
       this.setState({ IsPrivate: this.UserProfile.isPrivate });
